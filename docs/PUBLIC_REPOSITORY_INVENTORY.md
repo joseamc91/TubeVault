@@ -17,11 +17,16 @@
 - Temporales, backups, descargas y archivos generados durante pruebas o uso.
 - Imágenes de referencia locales que no formen parte documentada del producto.
 
-## Revisar antes del primer commit
+## Completado
 
-- Inicialización de Git y revisión del primer staging.
-- Creación del repositorio público y definición de su URL real.
-- `RepositoryUrl` y metadata que dependa de esa URL.
+- Git inicializado y primer commit creado.
+- Repositorio público creado en <https://github.com/joseamc91/TubeVault>.
+- `origin` configurado, rama principal `main` y primer push realizado.
+- `RepositoryUrl` y metadata pública del proyecto.
+
+## Pendiente
+
 - GitHub Actions y CI.
+- GitHub Releases.
 - Instalador y proceso público de distribución.
 - Configuración operativa de SignPath y firma de releases.

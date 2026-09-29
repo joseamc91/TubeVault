@@ -15,6 +15,8 @@
     <Authors>joseamc91</Authors>
     <Company>TubeVault</Company>
     <Copyright>Copyright © 2026 joseamc91</Copyright>
+    <RepositoryUrl>https://github.com/joseamc91/TubeVault</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <Version>2026.9.7</Version>
     <AssemblyVersion>2026.9.7.0</AssemblyVersion>
     <FileVersion>2026.9.7.0</FileVersion>

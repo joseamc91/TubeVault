@@ -8,7 +8,8 @@ verificados por SignPath.
 
 ## Objetivo futuro
 
-Cuando exista un repositorio público y el proyecto esté preparado, se pretende:
+El repositorio público oficial está disponible en
+<https://github.com/joseamc91/TubeVault>. Como evolución futura, se pretende:
 
 - generar builds oficiales mediante GitHub Actions;
 - solicitar firma a SignPath Foundation si el proyecto resulta aprobado;

@@ -10,6 +10,7 @@ TubeVault es una aplicación portable para Windows que permite a usuarios no té
 - Publicación `win-x64` self-contained: no requiere instalar .NET.
 - Sin paquetes NuGet adicionales.
 - Licencia: `GPL-3.0-only`.
+- Repositorio oficial: [github.com/joseamc91/TubeVault](https://github.com/joseamc91/TubeVault), rama principal `main`.
 - Componentes de terceros: TubeVault utiliza yt-dlp, FFmpeg y el runtime .NET. Consulte [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) para información sobre licencias y código fuente.
 
 ## Estado actual
@@ -148,7 +149,7 @@ Se abre desde la fila **Acerca de TubeVault** dentro de Ajustes y muestra:
 - plataforma Windows;
 - créditos y nota breve de licencias para yt-dlp y FFmpeg.
 
-No se muestra un enlace de GitHub porque todavía no existe una URL pública definida para TubeVault.
+El repositorio público oficial está disponible en [GitHub](https://github.com/joseamc91/TubeVault).
 
 ## Configuración y logs
 

@@ -11,9 +11,9 @@ correcciones de seguridad.
 No publiques vulnerabilidades sensibles, exploits ni datos personales en un
 issue público.
 
-Cuando el repositorio público lo permita, utiliza **GitHub Private Vulnerability
-Reporting** mediante la opción **Report a vulnerability** de la sección
-**Security**. Si esa opción todavía no está disponible, solicita primero un
+En el [apartado Security del repositorio oficial](https://github.com/joseamc91/TubeVault/security),
+comprueba si está disponible la opción **Report a vulnerability** de GitHub
+Private Vulnerability Reporting. Si esa opción no aparece, solicita primero un
 canal privado mediante los medios de contacto que figuren en el repositorio,
 sin incluir detalles técnicos sensibles en público.
 
