@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <SatelliteResourceLanguages>es;en</SatelliteResourceLanguages>
+
+    <AssemblyName>TubeVault</AssemblyName>
+    <RootNamespace>TubeVault</RootNamespace>
+    <Product>TubeVault</Product>
+    <Description>Aplicación sencilla para descargar música en MP3.</Description>
+    <Authors>joseamc91</Authors>
+    <Company>TubeVault</Company>
+    <Copyright>Copyright © 2026 joseamc91</Copyright>
+    <Version>2026.9.7</Version>
+    <AssemblyVersion>2026.9.7.0</AssemblyVersion>
+    <FileVersion>2026.9.7.0</FileVersion>
+    <InformationalVersion>2026.09.007</InformationalVersion>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="UrlLabel" xml:space="preserve"><value>YouTube link</value></data>
+  <data name="UrlPlaceholder" xml:space="preserve"><value>https://youtube.com/...</value></data>
+  <data name="Analyze" xml:space="preserve"><value>Analyze</value></data>
+  <data name="EmptyStateTitle" xml:space="preserve"><value>Analyze a YouTube video or playlist</value></data>
+  <data name="EmptyStateDescription" xml:space="preserve"><value>Paste a video or playlist link and click Analyze to view its information and prepare the download.</value></data>
+  <data name="SongHeading" xml:space="preserve"><value>Video information</value></data>
+  <data name="TitleLabel" xml:space="preserve"><value>Title:</value></data>
+  <data name="ChannelLabel" xml:space="preserve"><value>Channel:</value></data>
+  <data name="DurationLabel" xml:space="preserve"><value>Duration:</value></data>
+  <data name="PublishedLabel" xml:space="preserve"><value>Published:</value></data>
+  <data name="PlaylistHeading" xml:space="preserve"><value>Playlist information</value></data>
+  <data name="PlaylistLabel" xml:space="preserve"><value>Playlist:</value></data>
+  <data name="ItemsLabel" xml:space="preserve"><value>Items:</value></data>
+  <data name="FolderNameLabel" xml:space="preserve"><value>Folder name:</value></data>
+  <data name="SaveInLabel" xml:space="preserve"><value>Save to:</value></data>
+  <data name="ChooseFolder" xml:space="preserve"><value>Choose folder</value></data>
+  <data name="QualityLabel" xml:space="preserve"><value>MP3 quality:</value></data>
+  <data name="QualityHigh" xml:space="preserve"><value>High</value></data>
+  <data name="QualityMedium" xml:space="preserve"><value>Medium</value></data>
+  <data name="QualityLow" xml:space="preserve"><value>Low</value></data>
+  <data name="Download" xml:space="preserve"><value>Download MP3</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="OpenFolder" xml:space="preserve"><value>Open folder</value></data>
+  <data name="NewDownload" xml:space="preserve"><value>New download</value></data>
+  <data name="NotAvailable" xml:space="preserve"><value>Not available</value></data>
+  <data name="Waiting" xml:space="preserve"><value>Waiting for a link...</value></data>
+  <data name="Preparing" xml:space="preserve"><value>Preparing TubeVault...</value></data>
+  <data name="Analyzing" xml:space="preserve"><value>Analyzing link...</value></data>
+  <data name="AnalysisComplete" xml:space="preserve"><value>Analysis complete.</value></data>
+  <data name="AnalyzingCancelled" xml:space="preserve"><value>Analysis cancelled.</value></data>
+  <data name="DownloadingSong" xml:space="preserve"><value>Downloading song...</value></data>
+  <data name="DownloadingPlaylist" xml:space="preserve"><value>Downloading: song {0} of {1}</value></data>
+  <data name="CheckingSong" xml:space="preserve"><value>Checking downloaded file...</value></data>
+  <data name="CheckingPlaylist" xml:space="preserve"><value>Checking: song {0} of {1}</value></data>
+  <data name="CheckingFiles" xml:space="preserve"><value>Checking downloaded files...</value></data>
+  <data name="DownloadSuccess" xml:space="preserve"><value>Download completed successfully.</value></data>
+  <data name="SuccessViewTitle" xml:space="preserve"><value>Download complete</value></data>
+  <data name="SuccessFileReady" xml:space="preserve"><value>Your file is ready.</value></data>
+  <data name="SuccessPlaylistReady" xml:space="preserve"><value>Your download is ready.</value></data>
+  <data name="DownloadCancelled" xml:space="preserve"><value>Download cancelled.</value></data>
+  <data name="Cancelling" xml:space="preserve"><value>Cancelling...</value></data>
+  <data name="CancellingAnalysis" xml:space="preserve"><value>Cancelling analysis...</value></data>
+  <data name="DownloadFailed" xml:space="preserve"><value>The download could not be completed.</value></data>
+  <data name="TryNewDownload" xml:space="preserve"><value>You can start a new download and try again.</value></data>
+  <data name="EnterLink" xml:space="preserve"><value>Enter a link to analyze.</value></data>
+  <data name="AnalysisFailed" xml:space="preserve"><value>This link could not be analyzed.</value></data>
+  <data name="AnalysisHint" xml:space="preserve"><value>TubeVault is mainly designed for YouTube and YouTube Music links.</value></data>
+  <data name="ContentUnavailable" xml:space="preserve"><value>This content could not be accessed.</value></data>
+  <data name="ContentUnavailableHint" xml:space="preserve"><value>Check that it is still available and try again.</value></data>
+  <data name="NetworkFailed" xml:space="preserve"><value>TubeVault could not connect to analyze the link.</value></data>
+  <data name="NetworkHint" xml:space="preserve"><value>Check your Internet connection.</value></data>
+  <data name="PreparationFailed" xml:space="preserve"><value>TubeVault could not prepare the required components.</value></data>
+  <data name="SetupTitle" xml:space="preserve"><value>Preparing TubeVault</value></data>
+  <data name="SetupChecking" xml:space="preserve"><value>Checking components...</value></data>
+  <data name="SetupDownloadingYtDlp" xml:space="preserve"><value>Downloading yt-dlp...</value></data>
+  <data name="SetupDownloadingFfmpeg" xml:space="preserve"><value>Downloading FFmpeg...</value></data>
+  <data name="SetupDownloadedOf" xml:space="preserve"><value>{0}% — {1} MB of {2} MB</value></data>
+  <data name="SetupDownloaded" xml:space="preserve"><value>{0} MB downloaded</value></data>
+  <data name="SetupVerifyingYtDlp" xml:space="preserve"><value>Verifying yt-dlp...</value></data>
+  <data name="SetupVerifyingFfmpeg" xml:space="preserve"><value>Verifying FFmpeg...</value></data>
+  <data name="SetupInstalling" xml:space="preserve"><value>Installing components...</value></data>
+  <data name="SetupVerifying" xml:space="preserve"><value>Verifying components...</value></data>
+  <data name="SetupRepairing" xml:space="preserve"><value>Repairing TubeVault components...</value></data>
+  <data name="SetupCompleted" xml:space="preserve"><value>Setup complete.</value></data>
+  <data name="SetupFailed" xml:space="preserve"><value>The required components could not be downloaded. Check your Internet connection and try again.</value></data>
+  <data name="SetupRetry" xml:space="preserve"><value>Retry</value></data>
+  <data name="SetupExit" xml:space="preserve"><value>Exit</value></data>
+  <data name="TryAgain" xml:space="preserve"><value>Try again.</value></data>
+  <data name="ExistingSong" xml:space="preserve"><value>This song was already downloaded and has not been downloaded again.</value></data>
+  <data name="SongFailedAfterAttempts" xml:space="preserve"><value>This song could not be downloaded after several attempts.</value></data>
+  <data name="PlaylistAllSuccess" xml:space="preserve"><value>{0} of {1} songs downloaded successfully.</value></data>
+  <data name="PlaylistFinished" xml:space="preserve"><value>Download finished.</value></data>
+  <data name="PlaylistWithIssues" xml:space="preserve"><value>Download finished with issues.</value></data>
+  <data name="DownloadedOne" xml:space="preserve"><value>{0} song downloaded.</value></data>
+  <data name="DownloadedMany" xml:space="preserve"><value>{0} songs downloaded.</value></data>
+  <data name="ExistingOne" xml:space="preserve"><value>{0} song already existed.</value></data>
+  <data name="ExistingMany" xml:space="preserve"><value>{0} songs already existed.</value></data>
+  <data name="FailedOne" xml:space="preserve"><value>{0} song could not be downloaded.</value></data>
+  <data name="FailedMany" xml:space="preserve"><value>{0} songs could not be downloaded.</value></data>
+  <data name="FailedTitles" xml:space="preserve"><value>Could not download:</value></data>
+  <data name="AndMore" xml:space="preserve"><value>• And {0} more.</value></data>
+  <data name="FolderDialog" xml:space="preserve"><value>Choose where to save your music</value></data>
+  <data name="FolderMissing" xml:space="preserve"><value>The selected folder no longer exists. Choose another folder to continue.</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>A new yt-dlp version is available</value></data>
+  <data name="UpdateButton" xml:space="preserve"><value>UPDATE</value></data>
+  <data name="UpdatingYtDlp" xml:space="preserve"><value>Updating yt-dlp...</value></data>
+  <data name="UpdateSuccess" xml:space="preserve"><value>yt-dlp updated successfully.</value></data>
+  <data name="UpdateFailed" xml:space="preserve"><value>yt-dlp could not be updated. You can try again.</value></data>
+  <data name="TooltipAnalyze" xml:space="preserve"><value>Checks the link content before downloading.</value></data>
+  <data name="TooltipDownload" xml:space="preserve"><value>Downloads the analyzed content as MP3.</value></data>
+  <data name="TooltipCancel" xml:space="preserve"><value>Safely stops the current operation.</value></data>
+  <data name="TooltipFolder" xml:space="preserve"><value>Choose the folder where music will be saved.</value></data>
+  <data name="TooltipQuality" xml:space="preserve"><value>Choose the MP3 quality.</value></data>
+  <data name="TooltipTheme" xml:space="preserve"><value>Switch between light and dark themes.</value></data>
+  <data name="TooltipLanguage" xml:space="preserve"><value>Change the interface language.</value></data>
+  <data name="TooltipAbout" xml:space="preserve"><value>Information about TubeVault.</value></data>
+  <data name="TooltipUpdate" xml:space="preserve"><value>Downloads the latest official yt-dlp version.</value></data>
+  <data name="TooltipOpenFolder" xml:space="preserve"><value>Opens the latest download folder.</value></data>
+  <data name="TooltipNewDownload" xml:space="preserve"><value>Prepares TubeVault for another link.</value></data>
+  <data name="AboutTitle" xml:space="preserve"><value>About TubeVault</value></data>
+  <data name="AboutVersion" xml:space="preserve"><value>Version</value></data>
+  <data name="AboutArchitecture" xml:space="preserve"><value>Architecture</value></data>
+  <data name="AboutRuntime" xml:space="preserve"><value>Runtime</value></data>
+  <data name="AboutAuthor" xml:space="preserve"><value>Author</value></data>
+  <data name="AboutPlatform" xml:space="preserve"><value>Platform</value></data>
+  <data name="AboutCredits" xml:space="preserve"><value>Credits</value></data>
+  <data name="AboutLicenses" xml:space="preserve"><value>Licenses</value></data>
+  <data name="AboutLicenseText" xml:space="preserve"><value>TubeVault uses yt-dlp and FFmpeg under the licenses of their respective projects.</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="SettingsTitle" xml:space="preserve"><value>Settings</value></data>
+  <data name="SettingsAppearance" xml:space="preserve"><value>Appearance</value></data>
+  <data name="SettingsTheme" xml:space="preserve"><value>Theme</value></data>
+  <data name="SettingsLight" xml:space="preserve"><value>Light</value></data>
+  <data name="SettingsDark" xml:space="preserve"><value>Dark</value></data>
+  <data name="SettingsLanguage" xml:space="preserve"><value>Language</value></data>
+  <data name="SettingsApplicationLanguage" xml:space="preserve"><value>Application language</value></data>
+  <data name="LanguageSpanish" xml:space="preserve"><value>Español</value></data>
+  <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
+  <data name="SettingsCheckUpdates" xml:space="preserve"><value>Check for yt-dlp updates</value></data>
+  <data name="SettingsCheckFfmpegUpdates" xml:space="preserve"><value>Check for FFmpeg updates</value></data>
+  <data name="SettingsRepairComponents" xml:space="preserve"><value>Repair components</value></data>
+  <data name="SettingsInstalledVersion" xml:space="preserve"><value>Installed version: {0}</value></data>
+  <data name="SettingsLastCheck" xml:space="preserve"><value>Last checked: {0}</value></data>
+  <data name="SettingsLastCheckNever" xml:space="preserve"><value>Last checked: never</value></data>
+  <data name="SettingsNotChecked" xml:space="preserve"><value>Updates have not been checked yet.</value></data>
+  <data name="SettingsUpToDate" xml:space="preserve"><value>yt-dlp is up to date.</value></data>
+  <data name="FfmpegUpToDate" xml:space="preserve"><value>FFmpeg is up to date.</value></data>
+  <data name="FfmpegUpdateAvailable" xml:space="preserve"><value>A new FFmpeg version is available</value></data>
+  <data name="UpdatingFfmpeg" xml:space="preserve"><value>Updating FFmpeg...</value></data>
+  <data name="FfmpegUpdateSuccess" xml:space="preserve"><value>FFmpeg updated successfully.</value></data>
+  <data name="FfmpegUpdateFailed" xml:space="preserve"><value>FFmpeg could not be updated. You can try again.</value></data>
+  <data name="SettingsCheckingUpdates" xml:space="preserve"><value>Checking for updates...</value></data>
+  <data name="SettingsUpdateCheckFailed" xml:space="preserve"><value>Updates could not be checked.</value></data>
+  <data name="SettingsAboutTubeVault" xml:space="preserve"><value>About TubeVault</value></data>
+  <data name="SettingsComponentsAndUpdates" xml:space="preserve"><value>Components and updates</value></data>
+  <data name="ComponentUnavailable" xml:space="preserve"><value>The component is missing or needs repair.</value></data>
+  <data name="SettingsAccept" xml:space="preserve"><value>OK</value></data>
+  <data name="TooltipSettings" xml:space="preserve"><value>Open TubeVault settings.</value></data>
+  <data name="TooltipCheckUpdates" xml:space="preserve"><value>Checks whether a new yt-dlp version is available.</value></data>
+  <data name="TooltipCheckFfmpegUpdates" xml:space="preserve"><value>Checks whether a new FFmpeg version is available.</value></data>
+  <data name="TooltipUpdateFfmpeg" xml:space="preserve"><value>Updates FFmpeg and ffprobe together.</value></data>
+  <data name="TooltipRepairComponents" xml:space="preserve"><value>Checks and restores the required components.</value></data>
+  <data name="TooltipComponentsAndUpdates" xml:space="preserve"><value>Manage and repair TubeVault components.</value></data>
+  <data name="UpdatesAvailable" xml:space="preserve"><value>Updates are available</value></data>
+  <data name="SelectAll" xml:space="preserve"><value>Select all</value></data>
+  <data name="DeselectAll" xml:space="preserve"><value>Deselect all</value></data>
+  <data name="PlaylistSelectionCount" xml:space="preserve"><value>{0} of {1} selected</value></data>
+  <data name="SelectAtLeastOne" xml:space="preserve"><value>Select at least one song to download.</value></data>
+</root>

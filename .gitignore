@@ -1,0 +1,39 @@
+# Build / IDE
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Releases / artifacts
+/dist/
+/publish/
+/artifacts/
+/TestResults/
+/coverage/
+*.trx
+
+# Runtime data
+/logs/*
+!/logs/.gitkeep
+/config/*
+/tools/*
+!/tools/.gitkeep
+/downloads/
+
+# Temporales
+*.log
+*.tmp
+*.temp
+*.bak
+*.backup
+*.part
+.tubevault-*/
+.ffmpeg-preparation-*/
+.yt-dlp-preparation-*/
+
+# Referencias visuales locales no destinadas al repositorio
+/Imagen de ChatGPT*.png
