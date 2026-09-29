@@ -23,11 +23,13 @@
 - Repositorio público creado en <https://github.com/joseamc91/TubeVault>.
 - `origin` configurado, rama principal `main` y primer push realizado.
 - `RepositoryUrl` y metadata pública del proyecto.
-- Workflow de CI preparado en `.github/workflows/ci.yml`.
+- GitHub Actions operativo mediante `.github/workflows/ci.yml`.
+- Primera ejecución completada correctamente en un runner Windows alojado por GitHub.
+- Publish self-contained `win-x64` y artifact `TubeVault-win-x64` generados correctamente.
+- Artifact probado manualmente en Windows: bootstrap de dependencias, análisis real y descarga MP3 real correctos.
 
 ## Pendiente
 
-- Validar la primera ejecución del workflow en GitHub después de commit y push.
 - GitHub Releases.
-- Instalador y proceso público de distribución.
-- Configuración operativa de SignPath y firma de releases.
+- Instalador y distribución pública.
+- Configuración operativa de SignPath y firma de código.

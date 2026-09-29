@@ -1,5 +1,7 @@
 # TubeVault
 
+[![TubeVault CI](https://github.com/joseamc91/TubeVault/actions/workflows/ci.yml/badge.svg)](https://github.com/joseamc91/TubeVault/actions/workflows/ci.yml)
+
 TubeVault es una aplicación portable para Windows que permite a usuarios no técnicos analizar enlaces de YouTube o YouTube Music y descargar su audio en MP3.
 
 ## Tecnología y versión
