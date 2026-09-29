@@ -27,6 +27,7 @@
 - Primera ejecución completada correctamente en un runner Windows alojado por GitHub.
 - Publish self-contained `win-x64` y artifact `TubeVault-win-x64` generados correctamente.
 - Artifact probado manualmente en Windows: bootstrap de dependencias, análisis real y descarga MP3 real correctos.
+- Separación de datos instalada/portable mediante `portable.flag`; el publish normal no incluye el marcador.
 
 ## Pendiente
 

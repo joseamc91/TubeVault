@@ -13,7 +13,7 @@ internal sealed class SettingsService
 
     private readonly object settingsLock = new();
     private readonly LogService log;
-    private readonly string settingsPath = Path.Combine(AppPaths.ConfigDirectory, "settings.json");
+    private readonly string settingsPath = AppPaths.SettingsFilePath;
 
     public SettingsService(LogService log)
     {
@@ -211,6 +211,6 @@ internal sealed class SettingsService
         }
 
         var userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        return Directory.Exists(userFolder) ? userFolder : AppPaths.RootDirectory;
+        return Directory.Exists(userFolder) ? userFolder : AppPaths.DataDirectory;
     }
 }

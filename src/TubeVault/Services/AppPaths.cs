@@ -2,49 +2,30 @@ namespace TubeVault;
 
 internal static class AppPaths
 {
-    public static string RootDirectory { get; } = FindRootDirectory();
+    public static string AppDirectory { get; } =
+        Path.TrimEndingDirectorySeparator(Path.GetFullPath(AppContext.BaseDirectory));
 
-    public static string ToolsDirectory => Path.Combine(RootDirectory, "tools");
+    public static bool IsPortable { get; } =
+        File.Exists(Path.Combine(AppDirectory, "portable.flag"));
 
-    public static string ConfigDirectory => Path.Combine(RootDirectory, "config");
+    public static string DataDirectory { get; } = IsPortable
+        ? AppDirectory
+        : Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "TubeVault");
 
-    public static string LogsDirectory => Path.Combine(RootDirectory, "logs");
+    public static string ToolsDirectory { get; } = Path.Combine(DataDirectory, "tools");
 
-    private static string FindRootDirectory()
-    {
-        // Durante el desarrollo, localiza la solución. En una publicación portable,
-        // la carpeta del ejecutable pasa a ser la raíz de TubeVault.
-        var assemblyDirectory = Path.GetDirectoryName(typeof(AppPaths).Assembly.Location);
-        var startingDirectory = string.IsNullOrWhiteSpace(assemblyDirectory)
-            ? AppContext.BaseDirectory
-            : assemblyDirectory;
-        var directory = new DirectoryInfo(startingDirectory);
+    public static string ConfigDirectory { get; } = Path.Combine(DataDirectory, "config");
 
-        for (var level = 0; level < 6 && directory is not null; level++)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "TubeVault.sln")))
-            {
-                var expectedBinDirectory = Path.GetFullPath(Path.Combine(
-                    directory.FullName,
-                    "src",
-                    "TubeVault",
-                    "bin")) + Path.DirectorySeparatorChar;
-                var actualDirectory = Path.GetFullPath(startingDirectory)
-                                      .TrimEnd(Path.DirectorySeparatorChar)
-                                      + Path.DirectorySeparatorChar;
+    public static string LogsDirectory { get; } = Path.Combine(DataDirectory, "logs");
 
-                // Solo una DLL ejecutada desde el binario real del proyecto puede
-                // usar la raíz de desarrollo. Una publicación siempre usa su carpeta.
-                return actualDirectory.StartsWith(
-                    expectedBinDirectory,
-                    StringComparison.OrdinalIgnoreCase)
-                    ? directory.FullName
-                    : AppContext.BaseDirectory;
-            }
+    public static string SettingsFilePath { get; } =
+        Path.Combine(ConfigDirectory, "settings.json");
 
-            directory = directory.Parent;
-        }
+    public static string YtDlpPath { get; } = Path.Combine(ToolsDirectory, "yt-dlp.exe");
 
-        return AppContext.BaseDirectory;
-    }
+    public static string FfmpegPath { get; } = Path.Combine(ToolsDirectory, "ffmpeg.exe");
+
+    public static string FfprobePath { get; } = Path.Combine(ToolsDirectory, "ffprobe.exe");
 }

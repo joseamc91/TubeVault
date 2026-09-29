@@ -68,9 +68,9 @@ TubeVault/
 │       │   ├── UiText.resx
 │       │   └── UiText.en.resx
 │       └── Services/
-├── config/                 Configuración local de desarrollo
-├── tools/                  yt-dlp, FFmpeg y ffprobe
-├── logs/                   Registros técnicos diarios
+├── config/                 Datos locales cuando se usa modo portable
+├── tools/                  Herramientas del modo portable
+├── logs/                   Logs del modo portable
 └── dist/
 │   ├── TubeVault-2026.09.001.zip
 │   ├── TubeVault-2026.09.002.zip
@@ -155,7 +155,12 @@ El repositorio público oficial está disponible en [GitHub](https://github.com/
 
 ## Configuración y logs
 
-La configuración portable se guarda en `config/settings.json` y contiene:
+TubeVault usa dos modos de datos:
+
+- sin `portable.flag` junto a `TubeVault.exe`, guarda configuración, logs y herramientas en `%LocalAppData%\TubeVault`;
+- con `portable.flag` junto a `TubeVault.exe`, los guarda en `config/`, `logs/` y `tools/` junto a la aplicación.
+
+El publish normal no incluye `portable.flag`. La configuración se guarda en `config/settings.json` dentro de la raíz de datos del modo activo y contiene:
 
 ```json
 {
@@ -192,7 +197,7 @@ Cada versión se publica en una carpeta independiente. Para 2026.09.006:
 2. Descomprimir conservando la estructura.
 3. Ejecutar `TubeVault.exe`.
 
-`config` y `logs` se entregan vacíos. Se crean dentro de la propia carpeta portable en el primer arranque.
+Un paquete portable debe añadir expresamente `portable.flag`; su `config` y `logs` se entregan vacíos y se crean dentro de la propia carpeta en el primer arranque.
 
 ## Compatibilidad
 

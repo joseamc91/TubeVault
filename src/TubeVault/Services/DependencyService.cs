@@ -29,14 +29,20 @@ internal sealed class DependencyService
     {
         this.log = log;
         this.toolsDirectory = toolsDirectory ?? AppPaths.ToolsDirectory;
+        FfmpegPath = toolsDirectory is null
+            ? AppPaths.FfmpegPath
+            : Path.Combine(this.toolsDirectory, "ffmpeg.exe");
+        FfprobePath = toolsDirectory is null
+            ? AppPaths.FfprobePath
+            : Path.Combine(this.toolsDirectory, "ffprobe.exe");
         this.downloadUrl = downloadUrl ?? OfficialDownloadUrl;
         this.checksumUrl = checksumUrl ?? this.downloadUrl + ".sha256";
         this.versionUrl = versionUrl ?? this.downloadUrl + ".ver";
     }
 
-    public string FfmpegPath => Path.Combine(toolsDirectory, "ffmpeg.exe");
+    public string FfmpegPath { get; }
 
-    public string FfprobePath => Path.Combine(toolsDirectory, "ffprobe.exe");
+    public string FfprobePath { get; }
 
     public bool IsAvailable => IsValidFile(FfmpegPath) && IsValidFile(FfprobePath);
 

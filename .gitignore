@@ -23,6 +23,7 @@
 /tools/*
 !/tools/.gitkeep
 /downloads/
+portable.flag
 
 # Temporales
 *.log

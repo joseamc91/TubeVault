@@ -84,9 +84,15 @@ No existe contenedor de inyección de dependencias. Las dependencias se crean ex
 
 ### AppPaths
 
-Centraliza `RootDirectory`, `ToolsDirectory`, `ConfigDirectory` y `LogsDirectory`.
+Centraliza `IsPortable`, `AppDirectory`, `DataDirectory`, `ToolsDirectory`,
+`ConfigDirectory`, `LogsDirectory`, `SettingsFilePath` y las rutas de los tres
+ejecutables administrados.
 
-Durante el desarrollo solo utiliza la raíz de la solución cuando el ensamblado se ejecuta realmente desde `src/TubeVault/bin`. En una publicación usa `AppContext.BaseDirectory`, por lo que una copia portable no busca herramientas o configuración en el árbol de desarrollo ni en carpetas superiores.
+`AppDirectory` parte siempre de `AppContext.BaseDirectory`. La única señal de modo
+portable es un archivo `portable.flag` en esa carpeta. Con el marcador,
+`DataDirectory` coincide con la carpeta de la aplicación; sin él, apunta a
+`%LocalAppData%\TubeVault`. No se usan heurísticas basadas en la ubicación o en
+permisos.
 
 ### YtDlpService
 
@@ -198,14 +204,25 @@ La UI cancela mediante `CancellationToken`. `DownloadService` mata el árbol de 
 
 Cada intento tiene su propia carpeta `.tubevault-*`. La limpieza comprueba el prefijo, nunca borra por extensión y reintenta de forma corta y acotada cuando Windows tarda en liberar handles. Los MP3 completados que ya están en el destino no forman parte de esa carpeta y se conservan.
 
-## Datos portables
+## Datos instalados y portables
 
-En una publicación, todas las rutas parten de `AppContext.BaseDirectory`. `tools/`
-puede comenzar vacío; la aplicación crea y administra los ejecutables en esa misma
-raíz:
+Sin `portable.flag`, una ejecución normal usa datos separados del programa:
+
+```text
+%LocalAppData%\TubeVault\
+├── tools\yt-dlp.exe
+├── tools\ffmpeg.exe
+├── tools\ffprobe.exe
+├── config\settings.json
+└── logs\TubeVault_YYYY-MM-DD.log
+```
+
+Con `portable.flag` junto a `TubeVault.exe`, la raíz de datos es
+`AppContext.BaseDirectory`:
 
 ```text
 TubeVault.exe
+portable.flag
 tools/yt-dlp.exe
 tools/ffmpeg.exe
 tools/ffprobe.exe
@@ -213,4 +230,5 @@ config/settings.json
 logs/TubeVault_YYYY-MM-DD.log
 ```
 
-No se usa el `PATH`, el registro de Windows ni una base de datos.
+El publish normal no incorpora el marcador; un paquete portable debe añadirlo de
+forma explícita. No se usa el `PATH`, el registro de Windows ni una base de datos.

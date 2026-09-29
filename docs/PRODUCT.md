@@ -119,9 +119,13 @@ La actualización nunca es automática: solo se inicia cuando el usuario pulsa *
 
 ## Preparación y reparación de componentes
 
-TubeVault administra yt-dlp, FFmpeg y ffprobe dentro de `tools/`. Antes de permitir
+TubeVault administra yt-dlp, FFmpeg y ffprobe dentro de `tools/` en su raíz de datos. Antes de permitir
 el análisis valida que los tres funcionen. Si falta yt-dlp, recupera únicamente ese
 componente. Si falta o falla ffmpeg o ffprobe, reinstala ambos desde el mismo paquete.
+
+Sin `portable.flag` junto al ejecutable, la raíz de datos es
+`%LocalAppData%\TubeVault`. Con el marcador, configuración, logs y herramientas
+permanecen junto a `TubeVault.exe`. El publish normal no incluye el marcador.
 
 En un primer arranque sin herramientas se muestra una preparación guiada. Si no hay
 conexión y todavía no existe un entorno válido, el usuario puede reintentar o salir;

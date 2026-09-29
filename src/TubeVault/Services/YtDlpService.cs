@@ -28,8 +28,7 @@ internal sealed class YtDlpService
         string? releaseDownloadBaseUrl = null)
     {
         this.log = log;
-        this.executablePath = executablePath
-                              ?? Path.Combine(AppPaths.ToolsDirectory, "yt-dlp.exe");
+        this.executablePath = executablePath ?? AppPaths.YtDlpPath;
         this.releaseApiUrl = releaseApiUrl ?? OfficialReleaseApiUrl;
         this.releaseDownloadBaseUrl = releaseDownloadBaseUrl
                                       ?? OfficialReleaseDownloadBaseUrl;
