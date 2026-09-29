@@ -23,10 +23,11 @@
 - Repositorio público creado en <https://github.com/joseamc91/TubeVault>.
 - `origin` configurado, rama principal `main` y primer push realizado.
 - `RepositoryUrl` y metadata pública del proyecto.
+- Workflow de CI preparado en `.github/workflows/ci.yml`.
 
 ## Pendiente
 
-- GitHub Actions y CI.
+- Validar la primera ejecución del workflow en GitHub después de commit y push.
 - GitHub Releases.
 - Instalador y proceso público de distribución.
 - Configuración operativa de SignPath y firma de releases.

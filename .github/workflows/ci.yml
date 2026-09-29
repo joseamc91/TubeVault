@@ -1,0 +1,65 @@
+name: TubeVault CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and publish
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.401
+
+      - name: Show .NET SDK version
+        run: dotnet --version
+
+      - name: Restore
+        run: dotnet restore .\TubeVault.sln
+
+      - name: Build
+        run: dotnet build .\TubeVault.sln -c Release --no-restore
+
+      - name: Publish win-x64
+        run: dotnet publish .\src\TubeVault\TubeVault.csproj -c Release -r win-x64 --self-contained true -o .\artifacts\TubeVault-win-x64
+
+      - name: Validate publish output
+        shell: pwsh
+        run: |
+          $publishPath = Join-Path $env:GITHUB_WORKSPACE "artifacts\TubeVault-win-x64"
+          $executablePath = Join-Path $publishPath "TubeVault.exe"
+
+          if (-not (Test-Path -LiteralPath $executablePath -PathType Leaf)) {
+            throw "TubeVault.exe was not generated."
+          }
+
+          $forbiddenTools = @("yt-dlp.exe", "ffmpeg.exe", "ffprobe.exe")
+          $includedTools = Get-ChildItem -LiteralPath $publishPath -File -Recurse |
+            Where-Object { $_.Name -in $forbiddenTools }
+
+          if ($includedTools) {
+            $names = ($includedTools.Name | Sort-Object -Unique) -join ", "
+            throw "The publish contains tools that must be downloaded at runtime: $names"
+          }
+
+      - name: Upload publish artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: TubeVault-win-x64
+          path: .\artifacts\TubeVault-win-x64
+          if-no-files-found: error
