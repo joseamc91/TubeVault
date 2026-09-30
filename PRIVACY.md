@@ -1,6 +1,6 @@
 # Privacidad
 
-Este documento describe el comportamiento de TubeVault `2026.09.006` según su
+Este documento describe el comportamiento de TubeVault `2026.09.008` según su
 código fuente actual. No sustituye las políticas de los servicios de terceros.
 
 ## Datos almacenados localmente
@@ -8,15 +8,17 @@ código fuente actual. No sustituye las políticas de los servicios de terceros.
 TubeVault no opera un backend propio y no incluye cuentas de usuario,
 telemetría ni analytics propios.
 
-La aplicación guarda junto al ejecutable:
+La aplicación guarda sus datos bajo `data/`, junto al ejecutable:
 
-- `config/settings.json`: carpeta de destino, calidad MP3, tema, idioma y fechas
+- `data/config/settings.json`: carpeta de destino, calidad MP3, tema, idioma y fechas
   de las últimas comprobaciones de actualización de componentes;
-- `logs/TubeVault_YYYY-MM-DD.log`: registros técnicos diarios; se conservan como
+- `data/logs/TubeVault_YYYY-MM-DD.log`: registros técnicos diarios; se conservan como
   máximo quince;
-- `tools/`: copias locales de yt-dlp, FFmpeg y ffprobe descargadas durante la
+- `data/tools/`: copias locales de yt-dlp, FFmpeg y ffprobe descargadas durante la
   preparación;
-- los MP3 creados, en la carpeta elegida por el usuario.
+
+Los MP3 se guardan en la carpeta elegida por el usuario, que no tiene por qué
+estar dentro de `data/`.
 
 TubeVault no envía automáticamente la configuración ni los logs a su autor.
 Estos archivos permanecen en el equipo hasta que el usuario los elimine.

@@ -8,9 +8,9 @@ TubeVault es una aplicación para Windows que permite a usuarios no técnicos an
 
 - C# con WinForms.
 - .NET 10 para Windows (`net10.0-windows`).
-- Versión actual publicada: `2026.09.006`.
+- Versión pública histórica: `2026.09.007`; candidata actual: `2026.09.008` (public preview portable).
 - Publicación `win-x64` self-contained: no requiere instalar .NET.
-- `TubeVault.csproj` no usa `PackageReference`; el proyecto separado del instalador usa `WixToolset.Sdk/5.0.2` como dependencia de build.
+- `TubeVault.csproj` no usa `PackageReference`.
 - Licencia: `GPL-3.0-only`.
 - Repositorio oficial: [github.com/joseamc91/TubeVault](https://github.com/joseamc91/TubeVault), rama principal `main`.
 - Componentes de terceros: TubeVault utiliza yt-dlp, FFmpeg y el runtime .NET. Consulte [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) para información sobre licencias y código fuente.
@@ -18,6 +18,10 @@ TubeVault es una aplicación para Windows que permite a usuarios no técnicos an
 ## Estado actual
 
 TubeVault incluye análisis real mediante yt-dlp, vídeos individuales y playlists, descarga MP3, metadata nativa, progreso global, tres intentos totales por canción, detección de archivos existentes, validación con ffprobe, limpieza privada de temporales y cancelación segura del árbol de procesos.
+
+Desde la candidata `2026.09.008`, TubeVault Portable es el único formato de
+distribución: un ZIP y un artifact. La release/tag `2026.09.007` permanece inmutable.
+La preview `2026.09.008` todavía no está publicada.
 
 La versión `2026.09.006` está cerrada y publicada como release portable inmutable.
 Mejora la preparación con progreso HTTP real, separa la gestión de componentes,
@@ -68,9 +72,9 @@ TubeVault/
 │       │   ├── UiText.resx
 │       │   └── UiText.en.resx
 │       └── Services/
-├── config/                 Datos locales cuando se usa modo portable
-├── tools/                  Herramientas del modo portable
-├── logs/                   Logs del modo portable
+├── config/                 Datos locales excluidos del repositorio
+├── tools/                  Herramientas locales excluidas del repositorio
+├── logs/                   Logs locales excluidos del repositorio
 └── dist/
 │   ├── TubeVault-2026.09.001.zip
 │   ├── TubeVault-2026.09.002.zip
@@ -142,7 +146,7 @@ válidos anteriores.
 
 Se abre desde la fila **Acerca de TubeVault** dentro de Ajustes y muestra:
 
-- TubeVault `2026.09.006`;
+- versión de TubeVault definida en el proyecto;
 - versión detectada de yt-dlp;
 - versión detectada de FFmpeg;
 - arquitectura x64;
@@ -155,12 +159,10 @@ El repositorio público oficial está disponible en [GitHub](https://github.com/
 
 ## Configuración y logs
 
-TubeVault usa dos modos de datos:
+TubeVault es portable por definición. Guarda siempre sus datos bajo `data/`
+junto a `TubeVault.exe`: `data/config/`, `data/logs/` y `data/tools/`.
 
-- sin `portable.flag` junto a `TubeVault.exe`, guarda configuración, logs y herramientas en `%LocalAppData%\TubeVault`;
-- con `portable.flag` junto a `TubeVault.exe`, los guarda en `config/`, `logs/` y `tools/` junto a la aplicación.
-
-El publish normal no incluye `portable.flag`. La configuración se guarda en `config/settings.json` dentro de la raíz de datos del modo activo y contiene:
+La configuración se guarda en `data/config/settings.json` y contiene:
 
 ```json
 {
@@ -180,36 +182,48 @@ Los archivos creados por 2026.09.001 siguen siendo compatibles. Si faltan propie
 - idioma: `Spanish`;
 - últimas comprobaciones: nulas, lo que provoca las primeras comprobaciones en segundo plano.
 
-Los detalles técnicos se escriben en `logs/TubeVault_YYYY-MM-DD.log`. Se conserva un máximo de 15 logs diarios.
+Los detalles técnicos se escriben en `data/logs/TubeVault_YYYY-MM-DD.log`. Se conserva un máximo de 15 logs diarios. El destino de los MP3 lo elige el
+usuario y no tiene por qué estar dentro de `data/`.
 
 ## Dependencias administradas
 
-- `tools/yt-dlp.exe`: descarga oficial de yt-dlp, verificada mediante el checksum publicado y `--version`.
-- `tools/ffmpeg.exe` y `tools/ffprobe.exe`: mismo paquete essentials de Gyan.dev, verificado mediante SHA-256 y `-version`.
+- `data/tools/yt-dlp.exe`: descarga oficial de yt-dlp, verificada mediante el checksum publicado y `--version`.
+- `data/tools/ffmpeg.exe` y `data/tools/ffprobe.exe`: mismo paquete essentials de Gyan.dev, verificado mediante SHA-256 y `-version`.
 - Las descargas se validan en carpetas privadas antes de sustituir una instalación válida.
 - No se modifica el `PATH` ni se instala nada globalmente.
 
-## Build portable
+## TubeVault Portable
 
-Cada versión se publica en una carpeta independiente. Para 2026.09.006:
+Cuando se publique la preview `2026.09.008`:
 
-1. Copiar o comprimir `dist/TubeVault-2026.09.006/` completa.
-2. Descomprimir conservando la estructura.
+1. Descargar `TubeVault-2026.09.008-win-x64-portable.zip` desde una Release oficial.
+2. Extraer todo el ZIP.
 3. Ejecutar `TubeVault.exe`.
+4. En la primera ejecución, TubeVault prepara automáticamente sus componentes.
 
-Un paquete portable debe añadir expresamente `portable.flag`; su `config` y `logs` se entregan vacíos y se crean dentro de la propia carpeta en el primer arranque.
+El build self-contained agrupa la aplicación y el runtime en `TubeVault.exe`,
+evitando cientos de archivos visibles y sin requerir instalar .NET. El runtime
+puede utilizar sus propios mecanismos internos de extracción.
 
-## Instalador MSI de prueba
+El ZIP inicial incluye únicamente `TubeVault.exe`, `LICENSE`, `PRIVACY.md` y
+`THIRD-PARTY-NOTICES.md`. `data/` se crea cuando la aplicación necesita guardar
+datos. yt-dlp, FFmpeg y ffprobe no vienen incluidos y se obtienen y validan durante
+la preparación inicial.
 
-La infraestructura MSI se construye por separado con WiX Toolset 5.0.2 y no forma
-parte de `TubeVault.sln`. Consulte [docs/INSTALLER.md](docs/INSTALLER.md) para el
-modelo per-user y el comando de build. Todavía no es una release pública.
+Para mover TubeVault conservando configuración, herramientas y logs, mueve la
+carpeta completa, incluido `data/`.
 
 ## Code signing policy
 
-Consulte la [Code signing policy](docs/CODE_SIGNING_POLICY.md). Las builds
-actuales todavía están sin firmar; SignPath Foundation es el proveedor previsto,
-sujeto a la aprobación del proyecto.
+Consulte la [Code signing policy](docs/CODE_SIGNING_POLICY.md). TubeVault
+`2026.09.008` sigue sin firma digital ni integración activa de firma. La solicitud
+a SignPath Foundation fue rechazada el 30/09/2026; podría volver a solicitarse si
+el proyecto obtiene más señales públicas de adopción y actividad.
+
+TubeVault Portable `2026.09.008` se probó correctamente en un equipo Windows 11
+con Smart App Control activo. Ese resultado no garantiza su funcionamiento en
+todos los equipos. No se recomienda desactivar Smart App Control ni SmartScreen,
+añadir exclusiones o desbloquear archivos para ejecutar la preview.
 
 ## Compatibilidad
 
@@ -220,11 +234,10 @@ sujeto a la aprobación del proyecto.
 
 ## Limitaciones conocidas
 
-- El MSI actual es solo de prueba; todavía no hay instalador público ni firma digital.
+- Las builds siguen sin firma digital.
 - No hay actualización automática de TubeVault. Las actualizaciones de los componentes requieren una acción explícita.
 - No se incluyen cookies ni autenticación.
 - No se incrustan carátulas ni se corrige metadata mediante reglas propias.
-- La build no es single-file: deben conservarse todos los archivos y subcarpetas publicados.
 
 ## Compilación
 
@@ -234,11 +247,14 @@ Con el SDK de .NET 10 instalado:
 dotnet build .\TubeVault.sln -c Release
 ```
 
-Comando de referencia para la release cerrada:
+Para preparar el único ZIP Portable, con el SDK requerido disponible:
 
 ```powershell
-dotnet publish .\src\TubeVault\TubeVault.csproj -c Release -r win-x64 --self-contained true -o .\dist\TubeVault-2026.09.006
+.\scripts\build-portable.ps1
 ```
+
+El script genera `artifacts/portable/TubeVault-<versión>-win-x64-portable.zip`.
+Generar el artifact no crea una GitHub Release.
 
 ## Documentación para desarrollo
 
@@ -246,7 +262,6 @@ dotnet publish .\src\TubeVault\TubeVault.csproj -c Release -r win-x64 --self-con
 - [Arquitectura](ARCHITECTURE.md)
 - [Producto](docs/PRODUCT.md)
 - [Proceso de release](docs/RELEASE_PROCESS.md)
-- [Instalador MSI](docs/INSTALLER.md)
 
 ## Documentación pública
 

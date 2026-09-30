@@ -31,30 +31,6 @@ function Get-FullChildPath {
     return $fullPath
 }
 
-function Invoke-PortablePublish {
-    param(
-        [Parameter(Mandatory)] [string] $Name,
-        [Parameter(Mandatory)] [string] $ProjectPath,
-        [Parameter(Mandatory)] [string] $OutputPath,
-        [string[]] $AdditionalArguments = @()
-    )
-
-    $arguments = @(
-        'publish',
-        $ProjectPath,
-        '-c', 'Release',
-        '-r', 'win-x64',
-        '--self-contained', 'true',
-        '-o', $OutputPath
-    ) + $AdditionalArguments
-
-    Write-Host "Publishing $Name..."
-    & dotnet @arguments
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet publish para $Name terminó con código $LASTEXITCODE."
-    }
-}
-
 function Complete-PortablePayload {
     param(
         [Parameter(Mandatory)] [string] $Root,
@@ -64,9 +40,6 @@ function Complete-PortablePayload {
     Get-ChildItem -LiteralPath $Root -File -Recurse -Filter '*.pdb' |
         Remove-Item -Force
 
-    $portableFlagPath = Join-Path $Root 'portable.flag'
-    [System.IO.File]::WriteAllBytes($portableFlagPath, [byte[]]::new(0))
-
     foreach ($fileName in @('LICENSE', 'THIRD-PARTY-NOTICES.md', 'PRIVACY.md')) {
         Copy-Item `
             -LiteralPath (Join-Path $RepositoryRoot $fileName) `
@@ -75,177 +48,43 @@ function Complete-PortablePayload {
 }
 
 function Assert-PortablePayload {
-    param(
-        [Parameter(Mandatory)] [string] $Name,
-        [Parameter(Mandatory)] [string] $Root,
-        [switch] $RequireApplicationDll
-    )
-
-    foreach ($fileName in @(
-            'TubeVault.exe',
-            'portable.flag',
-            'LICENSE',
-            'THIRD-PARTY-NOTICES.md',
-            'PRIVACY.md')) {
-        $requiredPath = Join-Path $Root $fileName
-        if (-not (Test-Path -LiteralPath $requiredPath -PathType Leaf)) {
-            throw "$Name no contiene '$fileName' en la raíz."
-        }
-    }
-
-    $rootPortableFlag = [System.IO.Path]::GetFullPath(
-        (Join-Path $Root 'portable.flag'))
-    $portableFlags = @(Get-ChildItem -LiteralPath $Root -File -Recurse |
-        Where-Object Name -eq 'portable.flag')
-    if ($portableFlags.Count -ne 1) {
-        throw "$Name debe contener exactamente un portable.flag; encontrados: $($portableFlags.Count)."
-    }
-    if (-not $portableFlags[0].FullName.Equals(
-            $rootPortableFlag,
-            [System.StringComparison]::OrdinalIgnoreCase)) {
-        throw "$Name contiene portable.flag fuera de la raíz."
-    }
-    if ($portableFlags[0].Length -ne 0) {
-        throw "$Name contiene un portable.flag que no está vacío."
-    }
-
-    if ($RequireApplicationDll -and
-        -not (Test-Path -LiteralPath (Join-Path $Root 'TubeVault.dll') -PathType Leaf)) {
-        throw "$Name no contiene TubeVault.dll."
-    }
-
-    $forbiddenNames = @(
-        'yt-dlp.exe',
-        'ffmpeg.exe',
-        'ffprobe.exe',
-        'settings.json'
-    )
-    $forbiddenExtensions = @(
-        '.pdb',
-        '.mp3',
-        '.webm',
-        '.part',
-        '.msi',
-        '.wixpdb',
-        '.cab'
-    )
-
-    $forbiddenFiles = @(Get-ChildItem -LiteralPath $Root -File -Recurse |
-        Where-Object {
-            $_.Name -in $forbiddenNames -or
-            $_.Extension -in $forbiddenExtensions
-        })
-    if ($forbiddenFiles.Count -gt 0) {
-        $names = ($forbiddenFiles.FullName -join ', ')
-        throw "$Name contiene archivos prohibidos: $names"
-    }
-
-    $forbiddenDirectories = @(Get-ChildItem -LiteralPath $Root -Directory -Recurse |
-        Where-Object Name -In @('config', 'logs', 'tools'))
-    if ($forbiddenDirectories.Count -gt 0) {
-        $names = ($forbiddenDirectories.FullName -join ', ')
-        throw "$Name contiene directorios prohibidos: $names"
-    }
-}
-
-function Show-SingleFileStructure {
     param([Parameter(Mandatory)] [string] $Root)
 
-    $files = @(Get-ChildItem -LiteralPath $Root -File -Recurse)
-    $directories = @(Get-ChildItem -LiteralPath $Root -Directory -Recurse)
-    $looseDlls = @($files | Where-Object Extension -eq '.dll')
-
-    Write-Host 'Single-file publish structure:'
-    Write-Host "  Files: $($files.Count)"
-    Write-Host "  Directories: $($directories.Count)"
-    Write-Host "  TubeVault.dll: $(Test-Path -LiteralPath (Join-Path $Root 'TubeVault.dll') -PathType Leaf)"
-    Write-Host "  TubeVault.deps.json: $(Test-Path -LiteralPath (Join-Path $Root 'TubeVault.deps.json') -PathType Leaf)"
-    Write-Host "  TubeVault.runtimeconfig.json: $(Test-Path -LiteralPath (Join-Path $Root 'TubeVault.runtimeconfig.json') -PathType Leaf)"
-    Write-Host "  Loose DLL files: $($looseDlls.Count)"
-    Write-Host "  en directory: $(Test-Path -LiteralPath (Join-Path $Root 'en') -PathType Container)"
-    Write-Host "  es directory: $(Test-Path -LiteralPath (Join-Path $Root 'es') -PathType Container)"
-
-    if ($looseDlls.Count -gt 0) {
-        Write-Host '  Loose DLL list:'
-        foreach ($file in $looseDlls) {
-            Write-Host "    $($file.FullName.Substring($Root.Length).TrimStart('\'))"
+    $expectedNames = @('TubeVault.exe', 'LICENSE', 'PRIVACY.md', 'THIRD-PARTY-NOTICES.md')
+    $items = @(Get-ChildItem -LiteralPath $Root -Force -Recurse)
+    # La lista cerrada impide incluir datos de ejecuciÃ³n o archivos ajenos.
+    if ($items.Count -ne $expectedNames.Count -or
+        @($items | Where-Object { $_.PSIsContainer -or $_.Name -notin $expectedNames }).Count -gt 0) {
+        throw 'El payload debe contener Ãºnicamente los cuatro archivos pÃºblicos previstos.'
+    }
+    foreach ($fileName in $expectedNames) {
+        if (-not (Test-Path -LiteralPath (Join-Path $Root $fileName) -PathType Leaf)) {
+            throw "El payload no contiene '$fileName' en la raÃ­z."
         }
+    }
+    if ((Get-Item -LiteralPath (Join-Path $Root 'TubeVault.exe')).Length -le 0) {
+        throw 'El payload contiene un TubeVault.exe vacÃ­o.'
     }
 }
 
 function Assert-PortableZip {
-    param(
-        [Parameter(Mandatory)] [string] $Name,
-        [Parameter(Mandatory)] [string] $ZipPath
-    )
+    param([Parameter(Mandatory)] [string] $ZipPath)
 
     $archive = [System.IO.Compression.ZipFile]::OpenRead($ZipPath)
     try {
         $entries = @($archive.Entries)
-        $entryNames = @($entries | ForEach-Object {
-                $_.FullName.Replace('\', '/')
-            })
-
-        foreach ($fileName in @(
-                'LICENSE',
-                'THIRD-PARTY-NOTICES.md',
-                'PRIVACY.md')) {
-            if ($fileName -notin $entryNames) {
-                throw "$Name no contiene '$fileName' en la raíz del ZIP."
+        $expectedNames = @('TubeVault.exe', 'LICENSE', 'PRIVACY.md', 'THIRD-PARTY-NOTICES.md')
+        if ($entries.Count -ne $expectedNames.Count) {
+            throw 'El ZIP debe contener exactamente los cuatro archivos pÃºblicos previstos.'
+        }
+        foreach ($fileName in $expectedNames) {
+            $matches = @($entries | Where-Object { $_.FullName.Replace('\', '/') -eq $fileName })
+            if ($matches.Count -ne 1) {
+                throw "El ZIP debe contener exactamente un '$fileName' en la raÃ­z."
             }
-        }
-
-        $portableFlags = @($entries | Where-Object Name -eq 'portable.flag')
-        if ($portableFlags.Count -ne 1) {
-            throw "$Name debe contener exactamente un portable.flag; encontrados: $($portableFlags.Count)."
-        }
-        $portableFlagName = $portableFlags[0].FullName.Replace('\', '/')
-        if ($portableFlagName -ne 'portable.flag') {
-            throw "$Name contiene portable.flag fuera de la raíz del ZIP."
-        }
-        if ($portableFlags[0].Length -ne 0) {
-            throw "$Name contiene un portable.flag no vacío dentro del ZIP."
-        }
-
-        $tubeVaultExecutables = @($entries | Where-Object Name -eq 'TubeVault.exe')
-        if ($tubeVaultExecutables.Count -ne 1) {
-            throw "$Name debe contener exactamente un TubeVault.exe; encontrados: $($tubeVaultExecutables.Count)."
-        }
-        $tubeVaultExecutableName = $tubeVaultExecutables[0].FullName.Replace('\', '/')
-        if ($tubeVaultExecutableName -ne 'TubeVault.exe') {
-            throw "$Name contiene TubeVault.exe fuera de la raíz del ZIP."
-        }
-        if ($tubeVaultExecutables[0].Length -le 0) {
-            throw "$Name contiene un TubeVault.exe vacío."
-        }
-
-        $forbiddenNames = @(
-            'yt-dlp.exe',
-            'ffmpeg.exe',
-            'ffprobe.exe',
-            'settings.json'
-        )
-        $forbiddenExtensions = @(
-            '.pdb',
-            '.mp3',
-            '.webm',
-            '.part',
-            '.msi',
-            '.wixpdb',
-            '.cab'
-        )
-
-        $forbiddenEntries = @($entryNames | Where-Object {
-                $entryName = $_
-                $leafName = [System.IO.Path]::GetFileName($entryName)
-                $extension = [System.IO.Path]::GetExtension($entryName)
-
-                $leafName -in $forbiddenNames -or
-                $extension -in $forbiddenExtensions -or
-                $entryName -match '(^|/)(config|logs|tools)(/|$)'
-            })
-        if ($forbiddenEntries.Count -gt 0) {
-            throw "$Name contiene entradas prohibidas: $($forbiddenEntries -join ', ')"
+            if ($fileName -eq 'TubeVault.exe' -and $matches[0].Length -le 0) {
+                throw 'El ZIP contiene un TubeVault.exe vacÃ­o.'
+            }
         }
     }
     finally {
@@ -266,7 +105,7 @@ function New-PortableZip {
         [System.IO.Compression.CompressionLevel]::Optimal,
         $false)
 
-    Assert-PortableZip -Name $Name -ZipPath $ZipPath
+    Assert-PortableZip -ZipPath $ZipPath
 
     $zipFile = Get-Item -LiteralPath $ZipPath
     $hash = Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256
@@ -283,13 +122,6 @@ $portableInputRoot = Get-FullChildPath `
 $portableOutputRoot = Get-FullChildPath `
     -Path (Join-Path $artifactsRoot 'portable') `
     -Parent $artifactsRoot
-$classicRoot = Get-FullChildPath `
-    -Path (Join-Path $portableInputRoot 'classic') `
-    -Parent $portableInputRoot
-$singleFileRoot = Get-FullChildPath `
-    -Path (Join-Path $portableInputRoot 'single-file') `
-    -Parent $portableInputRoot
-
 $appProjectPath = Join-Path $repoRoot 'src\TubeVault\TubeVault.csproj'
 [xml] $appProject = Get-Content -LiteralPath $appProjectPath -Raw
 $versionNode = $appProject.SelectSingleNode('/Project/PropertyGroup/InformationalVersion')
@@ -302,16 +134,13 @@ if ($fullVersion -notmatch '^\d{4}\.\d{2}\.\d{3}$') {
     throw "InformationalVersion '$fullVersion' no cumple AAAA.MM.RRR."
 }
 
-$classicZipPath = Get-FullChildPath `
-    -Path (Join-Path $portableOutputRoot "TubeVault-$fullVersion-win-x64-portable-classic.zip") `
-    -Parent $portableOutputRoot
-$singleFileZipPath = Get-FullChildPath `
-    -Path (Join-Path $portableOutputRoot "TubeVault-$fullVersion-win-x64-portable-single-file.zip") `
+$zipPath = Get-FullChildPath `
+    -Path (Join-Path $portableOutputRoot "TubeVault-$fullVersion-win-x64-portable.zip") `
     -Parent $portableOutputRoot
 
 $dotnetCommand = Get-Command dotnet -ErrorAction SilentlyContinue
 if ($null -eq $dotnetCommand) {
-    throw 'No se encontró dotnet en PATH.'
+    throw 'No se encontrÃ³ dotnet en PATH.'
 }
 
 $sdkVersion = & dotnet --version
@@ -322,45 +151,32 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($sdkVersion)) {
 Write-Host "TubeVault version: $fullVersion"
 Write-Host "SDK: $sdkVersion"
 
-# Todas las rutas se calculan y validan antes de limpiar estos dos árboles.
+# Todas las rutas se calculan y validan antes de limpiar estos dos Ã¡rboles.
 foreach ($root in @($portableInputRoot, $portableOutputRoot)) {
     if (Test-Path -LiteralPath $root) {
         Remove-Item -LiteralPath $root -Recurse -Force
     }
 }
 
-New-Item -ItemType Directory -Path $classicRoot -Force | Out-Null
-New-Item -ItemType Directory -Path $singleFileRoot -Force | Out-Null
+New-Item -ItemType Directory -Path $portableInputRoot -Force | Out-Null
 New-Item -ItemType Directory -Path $portableOutputRoot -Force | Out-Null
 
-Invoke-PortablePublish `
-    -Name 'Portable Classic' `
-    -ProjectPath $appProjectPath `
-    -OutputPath $classicRoot
-Complete-PortablePayload -Root $classicRoot -RepositoryRoot $repoRoot
-Assert-PortablePayload `
-    -Name 'Portable Classic' `
-    -Root $classicRoot `
-    -RequireApplicationDll
-
-Invoke-PortablePublish `
-    -Name 'Portable Single File' `
-    -ProjectPath $appProjectPath `
-    -OutputPath $singleFileRoot `
-    -AdditionalArguments @(
-        '-p:PublishSingleFile=true',
-        '-p:IncludeNativeLibrariesForSelfExtract=true',
-        '-p:PublishTrimmed=false'
-    )
-Complete-PortablePayload -Root $singleFileRoot -RepositoryRoot $repoRoot
-Assert-PortablePayload -Name 'Portable Single File' -Root $singleFileRoot
-Show-SingleFileStructure -Root $singleFileRoot
+Write-Host 'Publishing Portable...'
+& dotnet publish $appProjectPath `
+    -c Release `
+    -r win-x64 `
+    --self-contained true `
+    -p:PublishSingleFile=true `
+    -p:IncludeNativeLibrariesForSelfExtract=true `
+    -p:PublishTrimmed=false `
+    -o $portableInputRoot
+if ($LASTEXITCODE -ne 0) {
+    throw "dotnet publish terminÃ³ con cÃ³digo $LASTEXITCODE."
+}
+Complete-PortablePayload -Root $portableInputRoot -RepositoryRoot $repoRoot
+Assert-PortablePayload -Root $portableInputRoot
 
 New-PortableZip `
-    -Name 'Portable Classic' `
-    -SourceRoot $classicRoot `
-    -ZipPath $classicZipPath
-New-PortableZip `
-    -Name 'Portable Single File' `
-    -SourceRoot $singleFileRoot `
-    -ZipPath $singleFileZipPath
+    -Name 'Portable' `
+    -SourceRoot $portableInputRoot `
+    -ZipPath $zipPath

@@ -21,7 +21,6 @@ tools/
 config/
 logs/
 dist/
-installer/
 scripts/
 ```
 
@@ -30,12 +29,11 @@ scripts/
 - `Controls/`: controles visuales pequeños y reutilizables, como botones, tarjetas y artwork.
 - `Resources/`: textos visibles en español e inglés mediante `.resx`.
 - `Services/`: análisis, descarga, dependencias, validación, configuración, logs, temas y actualización.
-- `tools/`: ejecutables locales de yt-dlp, FFmpeg y ffprobe.
-- `config/`: configuración portable.
-- `logs/`: logs técnicos diarios.
-- `dist/`: publicaciones portables separadas por versión.
-- `installer/`: proyecto WiX 5.0.2, separado de `TubeVault.sln`.
-- `scripts/`: construcción reproducible del MSI desde un publish temporal.
+- `tools/`: herramientas locales históricas excluidas del repositorio.
+- `config/`: datos locales históricos excluidos del repositorio.
+- `logs/`: logs locales históricos excluidos del repositorio.
+- `dist/`: publicaciones locales históricas e inmutables.
+- `scripts/`: construcción del único ZIP Portable en `artifacts/portable/`.
 
 ## Composición de la aplicación
 
@@ -71,16 +69,14 @@ resultado de Ajustes. Desde `SettingsForm` también se abre `AboutForm`.
 
 No existe contenedor de inyección de dependencias. Las dependencias se crean explícitamente porque el tamaño actual no justifica infraestructura adicional.
 
-## Instalador
+## Distribución Portable
 
-`scripts/build-installer.ps1` obtiene `InformationalVersion`, publica la aplicación
-self-contained `win-x64` en `artifacts/` y construye
-`installer/TubeVault.Installer` con WiX 5.0.2. El MSI instala únicamente los
-binarios y documentos legales bajo `%LocalAppData%\Programs\TubeVault`; los datos
-runtime permanecen separados en `%LocalAppData%\TubeVault`.
-
-El proyecto WiX no pertenece a `TubeVault.sln`, no usa custom actions y no incluye
-`portable.flag`, herramientas descargadas ni datos runtime.
+`scripts/build-portable.ps1` obtiene `InformationalVersion` y publica
+`win-x64` self-contained mediante .NET Single File, sin trimming. Agrupa la
+aplicación y el runtime en `TubeVault.exe`; .NET puede extraer internamente
+componentes cuando los necesita. El builder valida un payload de cuatro archivos
+y crea un único ZIP, sin datos de ejecución ni herramientas descargadas.
+La CI compila Release antes de empaquetar y sube únicamente ese ZIP como artifact.
 
 ## Modelos
 
@@ -99,19 +95,17 @@ El proyecto WiX no pertenece a `TubeVault.sln`, no usa custom actions y no inclu
 
 ### AppPaths
 
-Centraliza `IsPortable`, `AppDirectory`, `DataDirectory`, `ToolsDirectory`,
+Centraliza `AppDirectory`, `DataDirectory`, `ToolsDirectory`,
 `ConfigDirectory`, `LogsDirectory`, `SettingsFilePath` y las rutas de los tres
 ejecutables administrados.
 
-`AppDirectory` parte siempre de `AppContext.BaseDirectory`. La única señal de modo
-portable es un archivo `portable.flag` en esa carpeta. Con el marcador,
-`DataDirectory` coincide con la carpeta de la aplicación; sin él, apunta a
-`%LocalAppData%\TubeVault`. No se usan heurísticas basadas en la ubicación o en
-permisos.
+`AppDirectory` parte siempre de `AppContext.BaseDirectory` y `DataDirectory`
+es siempre `Path.Combine(AppDirectory, "data")`. Configuración, logs y
+herramientas derivan de esa raíz; no existe un segundo modo de datos.
 
 ### YtDlpService
 
-Valida `tools/yt-dlp.exe` mediante su estructura de ejecutable y `--version`. Si
+Valida `data/tools/yt-dlp.exe` mediante su estructura de ejecutable y `--version`. Si
 falta o está dañado, obtiene la publicación oficial, verifica `yt-dlp.exe` contra
 `SHA2-256SUMS` y valida la versión descargada antes de sustituir el archivo activo.
 La instalación anterior se conserva hasta completar la validación y se restaura
@@ -159,11 +153,11 @@ Comprueba que el MP3 exista y no esté vacío. Ejecuta el ffprobe local y exige 
 
 ### SettingsService
 
-Lee y escribe `config/settings.json` con `System.Text.Json`. Los enums se guardan como texto. Aplica valores predeterminados cuando el archivo o campos nuevos no existen y evita que un fallo de configuración cierre la aplicación.
+Lee y escribe `data/config/settings.json` con `System.Text.Json`. Los enums se guardan como texto. Aplica valores predeterminados cuando el archivo o campos nuevos no existen y evita que un fallo de configuración cierre la aplicación.
 
 ### LogService
 
-Escribe texto plano thread-safe en `logs/TubeVault_YYYY-MM-DD.log`. Registra niveles `INFO` y `ERROR`, conserva un máximo de quince archivos y nunca permite que un fallo de escritura detenga TubeVault.
+Escribe texto plano thread-safe en `data/logs/TubeVault_YYYY-MM-DD.log`. Registra niveles `INFO` y `ERROR`, conserva un máximo de quince archivos y nunca permite que un fallo de escritura detenga TubeVault.
 
 ### ThemeService
 
@@ -219,31 +213,29 @@ La UI cancela mediante `CancellationToken`. `DownloadService` mata el árbol de 
 
 Cada intento tiene su propia carpeta `.tubevault-*`. La limpieza comprueba el prefijo, nunca borra por extensión y reintenta de forma corta y acotada cuando Windows tarda en liberar handles. Los MP3 completados que ya están en el destino no forman parte de esa carpeta y se conservan.
 
-## Datos instalados y portables
+## Datos portables
 
-Sin `portable.flag`, una ejecución normal usa datos separados del programa:
-
-```text
-%LocalAppData%\TubeVault\
-├── tools\yt-dlp.exe
-├── tools\ffmpeg.exe
-├── tools\ffprobe.exe
-├── config\settings.json
-└── logs\TubeVault_YYYY-MM-DD.log
-```
-
-Con `portable.flag` junto a `TubeVault.exe`, la raíz de datos es
-`AppContext.BaseDirectory`:
+El ZIP inicial contiene únicamente:
 
 ```text
 TubeVault.exe
-portable.flag
-tools/yt-dlp.exe
-tools/ffmpeg.exe
-tools/ffprobe.exe
-config/settings.json
-logs/TubeVault_YYYY-MM-DD.log
+LICENSE
+PRIVACY.md
+THIRD-PARTY-NOTICES.md
 ```
 
-El publish normal no incorpora el marcador; un paquete portable debe añadirlo de
-forma explícita. No se usa el `PATH`, el registro de Windows ni una base de datos.
+La aplicación crea los datos necesarios bajo su propia carpeta:
+
+```text
+data/
+├── config/settings.json
+├── logs/TubeVault_YYYY-MM-DD.log
+└── tools/
+    ├── yt-dlp.exe
+    ├── ffmpeg.exe
+    └── ffprobe.exe
+```
+
+Los MP3 se guardan en el destino seleccionado por el usuario. Para conservar
+los datos al mover TubeVault, debe moverse la carpeta completa.
+No se usa el `PATH`, el registro de Windows ni una base de datos.

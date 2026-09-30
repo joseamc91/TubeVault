@@ -5,14 +5,7 @@ internal static class AppPaths
     public static string AppDirectory { get; } =
         Path.TrimEndingDirectorySeparator(Path.GetFullPath(AppContext.BaseDirectory));
 
-    public static bool IsPortable { get; } =
-        File.Exists(Path.Combine(AppDirectory, "portable.flag"));
-
-    public static string DataDirectory { get; } = IsPortable
-        ? Path.Combine(AppDirectory, "data")
-        : Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "TubeVault");
+    public static string DataDirectory { get; } = Path.Combine(AppDirectory, "data");
 
     public static string ToolsDirectory { get; } = Path.Combine(DataDirectory, "tools");
 

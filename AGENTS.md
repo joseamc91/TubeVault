@@ -55,7 +55,7 @@ Está diseñada para personas no técnicas: la interfaz debe ocultar herramienta
 
 ## Dependencias y procesos
 
-- Usar siempre `tools/yt-dlp.exe`, `tools/ffmpeg.exe` y `tools/ffprobe.exe`.
+- Usar siempre `data/tools/yt-dlp.exe`, `data/tools/ffmpeg.exe` y `data/tools/ffprobe.exe`.
 - No depender del `PATH` del sistema ni instalar componentes globalmente.
 - No ejecutar mediante CMD o PowerShell.
 - Crear procesos sin consola visible y usar `ProcessStartInfo.ArgumentList`.
@@ -63,16 +63,16 @@ Está diseñada para personas no técnicas: la interfaz debe ocultar herramienta
 
 ## Datos portables
 
-- La configuración vive en `config/settings.json` junto a la aplicación.
-- Los logs viven en `logs/TubeVault_YYYY-MM-DD.log` y se conservan como máximo quince.
-- Las herramientas viven en `tools/`.
+- La configuración vive en `data/config/settings.json` junto a la aplicación.
+- Los logs viven en `data/logs/TubeVault_YYYY-MM-DD.log` y se conservan como máximo quince.
+- Las herramientas viven en `data/tools/`.
 - Una publicación debe resolver estas rutas desde su propia carpeta.
 - No introducir rutas absolutas al equipo de desarrollo.
 
 ## Repositorio y releases
 
 - Durante el desarrollo normal, compilar y probar desde `src/TubeVault/bin/Release/net10.0-windows`; no ejecutar `dotnet publish` ni crear o modificar `dist/`.
-- Solo crear o actualizar una carpeta de `dist/` cuando el usuario pida explícitamente cerrar o publicar esa versión.
+- Preparar el ZIP Portable en `artifacts/` solo cuando se solicite expresamente; no modificar `dist/` histórico.
 - Una versión formalmente cerrada y publicada en `dist/` es un artefacto inmutable.
 - Nunca sobrescribir ni limpiar una release anterior ya cerrada.
 - Seguir [docs/RELEASE_PROCESS.md](docs/RELEASE_PROCESS.md) para una nueva publicación.
@@ -81,7 +81,7 @@ Está diseñada para personas no técnicas: la interfaz debe ocultar herramienta
 
 - Si se modifica código, compilar y ejecutar pruebas proporcionales al riesgo del cambio.
 - No repetir descargas o regresiones costosas si el área afectada ya está validada.
-- Probar desde `dist` únicamente durante el cierre explícito de una release portable.
-- Comprobar entonces que `config/` y `logs/` de la nueva release se entregan limpios.
+- Durante un cierre explícito, probar una extracción separada del ZIP Portable, sin modificar el ZIP final.
+- Comprobar entonces que el ZIP inicial no contiene `data/` ni datos de ejecución.
 - Informar archivos cambiados, pruebas ejecutadas, resultados y limitaciones.
 - Detenerse al completar exactamente el alcance solicitado.

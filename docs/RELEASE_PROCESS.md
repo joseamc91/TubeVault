@@ -1,145 +1,104 @@
 # Proceso de release
 
-## Versionado
+## Versionado y desarrollo
 
-TubeVault utiliza:
+TubeVault utiliza `AAAA.MM.REVISION`, con una revisión de tres dígitos que vuelve
+a `001` al cambiar el mes. La fuente de versión es `TubeVault.csproj`;
+`InformationalVersion` determina el nombre público del ZIP.
 
-```text
-AAAA.MM.REVISION
-```
+Durante el desarrollo normal se compila Release y se prueba desde
+`src/TubeVault/bin/Release/net10.0-windows`. Solo se ejecutan pruebas
+proporcionales al cambio. El empaquetado se realiza cuando se solicita
+expresamente o mediante CI; no crea por sí mismo una GitHub Release.
 
-Ejemplos:
+Las releases locales `2026.09.001`–`2026.09.006` y la release/tag pública
+`2026.09.007` son históricas e inmutables. Nunca se sobrescriben ni se limpian
+para preparar una versión nueva. `dist/` no se utiliza para el empaquetado actual.
 
-- `2026.09.001`: primera revisión publicada en septiembre de 2026.
-- `2026.09.002`: segunda revisión publicada en septiembre de 2026.
-- `2026.10.001`: primera revisión publicada en octubre de 2026.
+## Única distribución: TubeVault Portable
 
-La revisión usa tres dígitos y vuelve a `001` al cambiar el mes de versión.
+Desde la candidata `2026.09.008` existe un único ZIP `win-x64` self-contained,
+construido mediante .NET Single File. El usuario no necesita instalar .NET.
+Aplicación y runtime se agrupan en `TubeVault.exe`; .NET puede utilizar sus
+propios mecanismos internos de extracción.
 
-## Desarrollo
-
-Una versión puede acumular varios cambios antes de publicarse. Durante este periodo:
-
-1. Compilar en configuración Release.
-2. Probar desde `src/TubeVault/bin/Release/net10.0-windows`.
-3. Ejecutar solo las pruebas proporcionales al cambio realizado.
-4. No ejecutar `dotnet publish`.
-5. No crear, regenerar ni modificar carpetas de `dist/`.
-6. No verificar hashes de releases anteriores ni limpiar sus carpetas `config/` o `logs/`.
-7. No repetir pruebas desde `dist/` hasta que se solicite expresamente cerrar la versión.
-
-Una misma versión puede pasar por varios ciclos de cambio, build Release y prueba local. Solo la aprobación explícita del usuario inicia su publicación.
-
-`2026.09.006` fue aprobada, cerrada y publicada formalmente. Las publicaciones correspondientes a las versiones `2026.09.001`–`2026.09.006` son inmutables y no deben volver a modificarse.
-
-## Inmutabilidad
-
-- La inmutabilidad comienza cuando el usuario declara expresamente que una versión queda cerrada o publicada.
-- Una release cerrada no se modifica ni se sobrescribe.
-- Nunca se eliminan o limpian archivos dentro de una versión histórica para preparar otra.
-- Cada versión nueva recibe su propia carpeta `dist/TubeVault-AAAA.MM.REVISION/`.
-- El número de versión del proyecto, About, README y nombre de carpeta deben coincidir.
-
-## Tipo de publicación
-
-La publicación actual es:
-
-- `win-x64`;
-- self-contained;
-- no single-file;
-- sin instalador.
-
-El usuario debe poder descomprimir la carpeta y abrir `TubeVault.exe` sin instalar .NET manualmente.
-
-## Contenido esperado
-
-Las releases hasta `2026.09.004` incluyen los ejecutables de `tools/`. Desde
-`2026.09.005`, TubeVault distribuye `tools/` vacío y obtiene,
-validar y reparar sus componentes en el primer uso. No se copian ejecutables a esa
-release salvo que una decisión de producto posterior cambie expresamente esta regla.
+El ZIP inicial contiene exactamente estos archivos en la raíz:
 
 ```text
-dist/TubeVault-AAAA.MM.REVISION/
-├── TubeVault.exe
-├── TubeVault.dll
-├── runtime y dependencias de .NET
-├── tools/                  vacío desde 2026.09.005
-├── config/
-└── logs/
+TubeVault.exe
+LICENSE
+PRIVACY.md
+THIRD-PARTY-NOTICES.md
 ```
 
-`config/` y `logs/` deben entregarse vacíos. No incluir MP3, temporales, arneses de prueba, settings personales ni logs de validación.
+No contiene PDB, herramientas descargadas, configuración, logs, temporales ni
+`data/`. TubeVault obtiene y valida yt-dlp, FFmpeg y ffprobe durante la
+preparación inicial. Al necesitar sus datos crea:
 
-## Cierre de versión
+```text
+data/config/settings.json
+data/logs/TubeVault_YYYY-MM-DD.log
+data/tools/yt-dlp.exe
+data/tools/ffmpeg.exe
+data/tools/ffprobe.exe
+```
 
-Este proceso solo se ejecuta cuando el usuario pide expresamente cerrar, publicar o generar la release.
+El destino de los MP3 lo elige el usuario. Para mover TubeVault conservando
+configuración, herramientas y logs se mueve la carpeta completa, incluido
+`data/`.
 
-1. Confirmar el número de versión aprobado.
-2. Actualizar metadatos del proyecto, About y documentación que muestre esa versión.
-3. Compilar Release y resolver errores o advertencias pertinentes.
-4. Ejecutar pruebas proporcionales a los cambios realizados.
-5. Publicar `win-x64` self-contained en una carpeta nueva; detenerse si ya contiene una release cerrada anterior.
-6. Aplicar la política de `tools/` correspondiente a la versión: incluidos hasta 004; directorio vacío desde 005.
-7. Probar desde la carpeta publicada, no desde `src/TubeVault/bin`.
-8. Limpiar datos generados por la prueba dentro de la release.
-9. Verificar la independencia del árbol de desarrollo.
-10. Verificar que versiones anteriores de `dist/` no cambiaron.
-11. Considerar desde ese momento la carpeta publicada como congelada e inmutable.
+## Build y artifact
 
-## Comando de referencia
-
-Solo durante el cierre de versión, desde la raíz del repositorio y sustituyendo la versión del destino:
+Desde la raíz, con el SDK fijado por `global.json`:
 
 ```powershell
-dotnet publish .\src\TubeVault\TubeVault.csproj `
-  -c Release `
-  -r win-x64 `
-  --self-contained true `
-  -o .\dist\TubeVault-AAAA.MM.REVISION
+dotnet restore .\TubeVault.sln
+dotnet build .\TubeVault.sln -c Release --no-restore
+.\scripts\build-portable.ps1
 ```
 
-Confirmar siempre que el contenido final de `tools/` coincide con la política de la versión publicada.
+El builder publica el payload, elimina PDB, copia los documentos legales,
+valida los cuatro archivos públicos y vuelve a inspeccionar el ZIP.
+Muestra tamaño y SHA-256. La salida es:
+
+`artifacts/portable/TubeVault-AAAA.MM.REVISION-win-x64-portable.zip`.
+
+El workflow `TubeVault CI` conserva un build Release independiente, ejecuta el
+builder, comprueba que existe exactamente un ZIP esperado no vacío y sube
+únicamente ese ZIP como artifact
+`TubeVault-AAAA.MM.REVISION-win-x64-portable`.
+Los artifacts son temporales y no equivalen a releases públicas.
+La simplificación actual de CI deberá validarse en GitHub tras su envío.
+
+## Validación y publicación
+
+Solo la aprobación explícita del usuario autoriza crear tag y GitHub Release.
+
+1. Confirmar versión, notas y commit objetivo.
+2. Comprobar build y empaquetado en CI para ese código.
+3. Inspeccionar ZIP, nombre, contenido y SHA-256.
+4. Probar una extracción separada, conservando limpio el ZIP original.
+5. Validar arranque, preparación, análisis y los flujos afectados por el cambio.
+6. Confirmar datos bajo `data/` y destino MP3 elegido por el usuario.
+7. Registrar pruebas, limitaciones y estado de firma.
+8. Tras la autorización, crear el tag de versión y la GitHub Release sobre el
+   código validado, adjuntando únicamente el ZIP Portable.
+9. Mantener tag, release y asset publicado inmutables.
+
+`2026.09.008` se prepara como **public preview / pre-release**; todavía no está
+publicada. Sus notas están en [docs/releases/2026.09.008.md](releases/2026.09.008.md).
+No presentar la build como firmada: consulte la
+[Code signing policy](CODE_SIGNING_POLICY.md).
 
 ## Pruebas proporcionales
 
-No toda modificación exige repetir descargas extensas. Elegir pruebas según el área afectada:
+- Documentación: revisar contenido y enlaces sin recompilar.
+- Textos y UI: comprobar ES/EN y temas claro/oscuro.
+- Configuración y componentes: comprobar caso válido y recuperación.
+- Descarga y playlists: validar los casos afectados, archivos existentes y ffprobe.
+- Cancelación: comprobar cierre de procesos y limpieza privada.
 
-- documentación: revisar enlaces y contenido, sin recompilar;
-- textos o layout: compilar y revisar los estados visuales afectados;
-- settings: comprobar valor predeterminado, lectura antigua y persistencia;
-- análisis: probar vídeo, playlist y URL mixta;
-- descarga o validación: probar canción corta, existente, ffprobe y limpieza;
-- playlist: usar una lista pequeña y comprobar continuidad ante fallos;
-- cancelación: confirmar cierre de procesos, conservación de completados y ausencia de temporales;
-- updater: validar comprobación, sustitución segura y conservación del ejecutable anterior ante fallo.
-
-Evitar pruebas de red costosas si el cambio no puede afectar al motor y existe una validación reciente aplicable.
-
-## Verificación desde dist
-
-Durante el cierre de una release que modifica código ejecutable:
-
-- abrir `TubeVault.exe` desde su carpeta de `dist`;
-- comprobar que no aparece consola;
-- confirmar que `tools`, `config` y `logs` se resuelven bajo esa misma carpeta;
-- confirmar que no accede accidentalmente a `src/TubeVault/bin` ni a otra copia;
-- ejecutar el caso funcional mínimo relevante;
-- comprobar que no quedan `.tubevault-*`, `.part`, `.webm` u otros temporales propios;
-- comprobar que no quedan procesos yt-dlp, FFmpeg o ffprobe huérfanos;
-- volver a dejar `config/` y `logs/` vacíos.
-
-## Registro de resultados
-
-La entrega de una release debe indicar:
-
-- archivos modificados;
-- tipo y ruta de publicación;
-- resultado de compilación;
-- pruebas ejecutadas y no ejecutadas;
-- tamaño aproximado;
-- estado de releases anteriores;
-- limitaciones conocidas.
-
-## Evolución del proceso
-
-Git, tags y GitHub Releases son una evolución prevista para mejorar trazabilidad y distribución. No debe asumirse que estén implantados: antes de usarlos hay que comprobar el estado real del repositorio y acordar el flujo correspondiente.
+La validación física de TubeVault Portable `2026.09.008` completó preparación,
+análisis de YouTube Music, descarga MP3 y ffprobe en un equipo Windows 11 con
+Smart App Control activo. Ese resultado no garantiza otros equipos; tampoco
+valida por sí mismo cambios posteriores de empaquetado o CI.

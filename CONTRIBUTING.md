@@ -9,8 +9,7 @@ técnicas.
 - Windows 10/11 x64 compatible con .NET 10.
 - .NET SDK `10.0.401`. `global.json` fija el SDK y admite únicamente parches
   compatibles de su misma banda.
-- La aplicación no usa `PackageReference`. El instalador restaura por separado
-  `WixToolset.Sdk/5.0.2` como dependencia de build.
+- La aplicación no usa `PackageReference`.
 
 Desde la raíz del proyecto:
 
@@ -30,8 +29,7 @@ La salida de desarrollo se genera en
   logs, temas y localización.
 - `src/TubeVault/Controls/`: controles WinForms reutilizables.
 - `src/TubeVault/Resources/`: textos localizados en español e inglés.
-- `installer/TubeVault.Installer/`: proyecto WiX separado de la solución.
-- `scripts/`: automatización reproducible del instalador.
+- `scripts/`: empaquetado del único ZIP Portable.
 - `docs/`: producto, arquitectura y proceso de release.
 
 Consulta `AGENTS.md`, `ARCHITECTURE.md` y `docs/PRODUCT.md` antes de cambiar el
@@ -54,7 +52,7 @@ comportamiento.
 ## Archivos que no deben versionarse
 
 No incluyas `dist/`, `bin/`, `obj/`, herramientas descargadas, binarios de
-terceros, `config/settings.json`, logs, archivos multimedia, temporales ni datos
+terceros, `data/`, configuración personal, logs, archivos multimedia, temporales ni datos
 locales. Respeta `.gitignore`.
 
 Las releases cerradas son inmutables. Una contribución normal no debe crear ni
@@ -76,6 +74,5 @@ modificar `dist/`, ni incorporar `yt-dlp.exe`, `ffmpeg.exe` o `ffprobe.exe`.
 No ejecutes `dotnet publish` durante el desarrollo normal. La publicación se
 reserva al cierre explícito de una versión según `docs/RELEASE_PROCESS.md`.
 
-GitHub Actions valida la aplicación. La publicación del instalador y la firma con
-SignPath siguen siendo infraestructura futura, no requisitos operativos del flujo
-actual.
+GitHub Actions compila la aplicación y prepara un único ZIP Portable como
+artifact temporal. La firma no está implementada.

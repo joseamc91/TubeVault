@@ -2,39 +2,40 @@
 
 ## Publicar
 
-- `TubeVault.sln`.
-- `src/`, incluidos el proyecto, código fuente, controles, modelos y recursos propios.
-- `README.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md`, `SECURITY.md`, `CONTRIBUTING.md` y `PRIVACY.md`.
-- `.gitignore`, `.editorconfig`, `.gitattributes`, `global.json`, `AGENTS.md` y `ARCHITECTURE.md`.
-- `docs/` y los archivos de configuración necesarios para compilar.
-- `.gitkeep` únicamente en directorios vacíos que deban conservarse.
+- `TubeVault.sln` y `src/`: proyecto, código, controles, modelos y recursos propios.
+- `scripts/build-portable.ps1` y `.github/workflows/ci.yml`.
+- `README.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md`, `SECURITY.md`,
+  `CONTRIBUTING.md` y `PRIVACY.md`.
+- `.gitignore`, `.editorconfig`, `.gitattributes`, `global.json`,
+  `AGENTS.md`, `ARCHITECTURE.md` y `docs/`.
+- `.gitkeep` únicamente donde deba conservarse un directorio vacío.
 
-## No publicar
+## No publicar en el repositorio
 
-- `dist/`, `bin/`, `obj/` y otros artefactos de build o release.
-- Herramientas descargadas y binarios de terceros dentro de `tools/`.
-- Configuración personal, logs, rutas o datos locales del usuario.
-- Temporales, backups, descargas y archivos generados durante pruebas o uso.
-- Imágenes de referencia locales que no formen parte documentada del producto.
+- `dist/`, `artifacts/`, `bin/`, `obj/` y salidas de build/release.
+- `data/`, herramientas descargadas y binarios de terceros.
+- Configuración personal, logs, temporales, backups y archivos de pruebas.
+- Imágenes de referencia locales ajenas al producto.
 
-## Completado
+## Estado actual
 
-- Git inicializado y primer commit creado.
-- Repositorio público creado en <https://github.com/joseamc91/TubeVault>.
-- `origin` configurado, rama principal `main` y primer push realizado.
-- `RepositoryUrl` y metadata pública del proyecto.
-- GitHub Actions operativo mediante `.github/workflows/ci.yml`.
-- Primera ejecución completada correctamente en un runner Windows alojado por GitHub.
-- Publish self-contained `win-x64` y artifact `TubeVault-win-x64` generados correctamente.
-- MSI `win-x64` generado y validado correctamente por GitHub Actions como un segundo artifact independiente y versionado.
-- Los artifacts de GitHub Actions son temporales; todavía no son releases públicas ni están firmados.
-- Artifact probado manualmente en Windows: bootstrap de dependencias, análisis real y descarga MP3 real correctos.
-- Separación de datos instalada/portable mediante `portable.flag`; el publish normal no incluye el marcador.
-- Primera infraestructura MSI de prueba con WiX 5.0.2 y script de build reproducible.
+- Git y repositorio público en <https://github.com/joseamc91/TubeVault>,
+  `origin` configurado, rama `main` y metadata pública preparada.
+- CI ejecutada previamente con éxito en runner Windows alojado por GitHub.
+- Desde la candidata `2026.09.008`, única distribución TubeVault Portable:
+  un ZIP self-contained `win-x64` y un artifact versionado.
+- Builder y workflow simplificados en el worktree; esta revisión de CI debe
+  validarse en GitHub tras su envío. Los artifacts son temporales.
+- Prueba física de preparación, análisis y descarga MP3 con ffprobe correcta
+  en un equipo Windows 11 con Smart App Control activo, sin garantía universal.
+- Datos siempre bajo `<AppDirectory>/data`; el ZIP inicial contiene cuatro
+  archivos públicos y ninguna herramienta descargada.
+- La release/tag `2026.09.007` y publicaciones anteriores permanecen inmutables.
+- Sin firma digital. SignPath Foundation rechazó la solicitud el 30/09/2026;
+  podría volver a solicitarse con más señales públicas de adopción y actividad.
 
 ## Pendiente
 
-- GitHub Releases.
-- Validación manual de instalación/desinstalación y futura UI del instalador.
-- Distribución pública del MSI mediante GitHub Releases.
-- Configuración operativa de SignPath y firma de código.
+- Validar en GitHub la CI simplificada a un único artifact Portable.
+- Crear, con autorización, la pre-release `2026.09.008` y distribuir su único ZIP.
+- Evaluar firma futura; no existe proveedor ni integración activa.

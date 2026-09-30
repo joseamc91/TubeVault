@@ -17,13 +17,8 @@
 *.trx
 
 # Runtime data
-/logs/*
-!/logs/.gitkeep
-/config/*
-/tools/*
-!/tools/.gitkeep
+**/data/
 /downloads/
-portable.flag
 
 # Temporales
 *.log

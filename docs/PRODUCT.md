@@ -94,7 +94,7 @@ Los elementos finalizados antes de cancelar permanecen en el destino. La aplicac
 
 La interfaz muestra mensajes breves para URL no válida, contenido no disponible, problemas de red, fallos de preparación o descarga y cancelación.
 
-No muestra stderr, stack traces ni comandos. El detalle técnico se guarda en un log diario dentro de `logs/`, con un máximo de quince archivos.
+No muestra stderr, stack traces ni comandos. El detalle técnico se guarda en un log diario dentro de `data/logs/`, con un máximo de quince archivos.
 
 ## Apariencia e idioma
 
@@ -119,13 +119,14 @@ La actualización nunca es automática: solo se inicia cuando el usuario pulsa *
 
 ## Preparación y reparación de componentes
 
-TubeVault administra yt-dlp, FFmpeg y ffprobe dentro de `tools/` en su raíz de datos. Antes de permitir
+TubeVault administra yt-dlp, FFmpeg y ffprobe dentro de `data/tools/` junto a la aplicación. Antes de permitir
 el análisis valida que los tres funcionen. Si falta yt-dlp, recupera únicamente ese
 componente. Si falta o falla ffmpeg o ffprobe, reinstala ambos desde el mismo paquete.
 
-Sin `portable.flag` junto al ejecutable, la raíz de datos es
-`%LocalAppData%\TubeVault`. Con el marcador, configuración, logs y herramientas
-permanecen junto a `TubeVault.exe`. El publish normal no incluye el marcador.
+TubeVault es siempre portable. Su raíz de datos es `<AppDirectory>/data`:
+configuración en `data/config`, logs en `data/logs` y herramientas en
+`data/tools`. El ZIP inicial no contiene datos de ejecución ni herramientas.
+Para mover la aplicación conservando sus datos, se mueve la carpeta completa.
 
 En un primer arranque sin herramientas se muestra una preparación guiada. Si no hay
 conexión y todavía no existe un entorno válido, el usuario puede reintentar o salir;
