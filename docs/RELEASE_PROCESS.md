@@ -74,6 +74,10 @@ La CI portable de `2026.09.008` ya fue validada en GitHub.
 
 Solo la aprobación explícita del usuario autoriza crear tag y GitHub Release.
 
+Con cada nueva versión deben actualizarse `CHANGELOG.md` y `CHANGELOG.en.md`.
+Solo deben incluir cambios realmente introducidos en esa versión, con entradas
+breves y orientadas al usuario.
+
 1. Confirmar versión, notas y commit objetivo.
 2. Comprobar build y empaquetado en CI para ese código.
 3. Inspeccionar ZIP, nombre, contenido y SHA-256.

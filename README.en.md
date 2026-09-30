@@ -83,6 +83,7 @@ You do not need to disable Smart App Control or SmartScreen, or add exclusions, 
 
 For more detailed information:
 
+- [Changelog](CHANGELOG.en.md)
 - [Privacy](PRIVACY.md)
 - [GPL-3.0 license](LICENSE)
 - [Third-party components](THIRD-PARTY-NOTICES.md)

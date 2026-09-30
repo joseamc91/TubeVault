@@ -4,6 +4,7 @@
 
 - `TubeVault.sln` y `src/`: proyecto, código, controles, modelos y recursos propios.
 - `scripts/build-portable.ps1` y `.github/workflows/ci.yml`.
+- `CHANGELOG.md` y `CHANGELOG.en.md`.
 - `README.md`, `README.en.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md`, `SECURITY.md`,
   `CONTRIBUTING.md` y `PRIVACY.md`.
 - `.gitignore`, `.editorconfig`, `.gitattributes`, `global.json`,

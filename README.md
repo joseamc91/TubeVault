@@ -83,6 +83,7 @@ No es necesario desactivar Smart App Control, SmartScreen ni añadir exclusiones
 
 Para información más detallada:
 
+- [Changelog](CHANGELOG.md)
 - [Privacidad](PRIVACY.md)
 - [Licencia GPL-3.0](LICENSE)
 - [Componentes de terceros](THIRD-PARTY-NOTICES.md)
