@@ -1,9 +1,9 @@
-﻿<p align="center">
+<p align="center">
   <img src="docs/assets/Banner_README.png" alt="TubeVault" width="100%">
 </p>
 
 <p align="center">
-  <a href="README.md">EspaÃ±ol</a> Â· <strong>English</strong>
+  <a href="README.md">Español</a> · <strong>English</strong>
 </p>
 
 <p align="center">
@@ -25,12 +25,12 @@
 
 <p align="center">
   <a href="https://github.com/joseamc91/TubeVault/releases/latest/download/TubeVault-2026.09.009-win-x64-portable.zip">
-    <img src="https://img.shields.io/badge/â¬‡%20DESCARGAR%20TUBEVAULT-3B82F6?style=for-the-badge" alt="Download TubeVault">
+    <img src="https://img.shields.io/badge/⬇%20DOWNLOAD%20TUBEVAULT-3B82F6?style=for-the-badge" alt="Download TubeVault">
   </a>
 </p>
 
 <p align="center">
-  <strong>Portable Â· Self-contained Â· No .NET installation required</strong>
+  <strong>Portable · Self-contained · No .NET installation required</strong>
 </p>
 
 <p align="center">
