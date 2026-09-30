@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-TubeVault `2026.09.008` sigue sin firma digital. No existe certificado asignado
+TubeVault `2026.09.009`, preparada como primera Stable, sigue sin firma digital. No existe certificado asignado
 al proyecto ni integración activa con ningún proveedor de firma.
 
 La solicitud a SignPath Foundation fue rechazada el **30/09/2026** porque el
@@ -18,7 +18,7 @@ TubeVault Portable `2026.09.008` se probó correctamente de principio a fin en
 **un equipo Windows 11 con Smart App Control activo**. La prueba no garantiza el
 mismo comportamiento en todos los equipos. No se recomienda desactivar Smart
 App Control ni SmartScreen, añadir exclusiones o desbloquear archivos para
-ejecutar la preview.
+ejecutar TubeVault.
 
 ## Roles del proyecto
 

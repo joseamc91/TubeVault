@@ -4,7 +4,7 @@
 
 - `TubeVault.sln` y `src/`: proyecto, código, controles, modelos y recursos propios.
 - `scripts/build-portable.ps1` y `.github/workflows/ci.yml`.
-- `README.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md`, `SECURITY.md`,
+- `README.md`, `README.en.md`, `LICENSE`, `THIRD-PARTY-NOTICES.md`, `SECURITY.md`,
   `CONTRIBUTING.md` y `PRIVACY.md`.
 - `.gitignore`, `.editorconfig`, `.gitattributes`, `global.json`,
   `AGENTS.md`, `ARCHITECTURE.md` y `docs/`.
@@ -22,20 +22,22 @@
 - Git y repositorio público en <https://github.com/joseamc91/TubeVault>,
   `origin` configurado, rama `main` y metadata pública preparada.
 - CI ejecutada previamente con éxito en runner Windows alojado por GitHub.
-- Desde la candidata `2026.09.008`, única distribución TubeVault Portable:
+- Desde la Public Preview publicada `2026.09.008`, única distribución TubeVault Portable:
   un ZIP self-contained `win-x64` y un artifact versionado.
-- Builder y workflow simplificados en el worktree; esta revisión de CI debe
-  validarse en GitHub tras su envío. Los artifacts son temporales.
+- CI portable de `2026.09.008` validada en GitHub; sus artifacts son temporales.
+- `2026.09.008` publicada como Public Preview / Pre-release.
+- `2026.09.009` se prepara como primera Stable / Latest, con branding renovado
+  y sin cambios funcionales respecto a 008.
+- Presentación pública renovada: README ES/EN, banner, captura y assets visuales públicos.
 - Prueba física de preparación, análisis y descarga MP3 con ffprobe correcta
   en un equipo Windows 11 con Smart App Control activo, sin garantía universal.
 - Datos siempre bajo `<AppDirectory>/data`; el ZIP inicial contiene cuatro
   archivos públicos y ninguna herramienta descargada.
-- La release/tag `2026.09.007` y publicaciones anteriores permanecen inmutables.
+- Las releases/tags `2026.09.007` y `2026.09.008`, y publicaciones anteriores permanecen inmutables.
 - Sin firma digital. SignPath Foundation rechazó la solicitud el 30/09/2026;
   podría volver a solicitarse con más señales públicas de adopción y actividad.
 
 ## Pendiente
 
-- Validar en GitHub la CI simplificada a un único artifact Portable.
-- Crear, con autorización, la pre-release `2026.09.008` y distribuir su único ZIP.
+- Publicar, con autorización y validación previa, `2026.09.009` como primera Stable / Latest.
 - Evaluar firma futura; no existe proveedor ni integración activa.

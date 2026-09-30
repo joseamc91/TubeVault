@@ -12,12 +12,12 @@ proporcionales al cambio. El empaquetado se realiza cuando se solicita
 expresamente o mediante CI; no crea por sí mismo una GitHub Release.
 
 Las releases locales `2026.09.001`–`2026.09.006` y la release/tag pública
-`2026.09.007` son históricas e inmutables. Nunca se sobrescriben ni se limpian
+`2026.09.007` y `2026.09.008` son históricas e inmutables. Nunca se sobrescriben ni se limpian
 para preparar una versión nueva. `dist/` no se utiliza para el empaquetado actual.
 
 ## Única distribución: TubeVault Portable
 
-Desde la candidata `2026.09.008` existe un único ZIP `win-x64` self-contained,
+Desde la Public Preview publicada `2026.09.008` existe un único ZIP `win-x64` self-contained,
 construido mediante .NET Single File. El usuario no necesita instalar .NET.
 Aplicación y runtime se agrupan en `TubeVault.exe`; .NET puede utilizar sus
 propios mecanismos internos de extracción.
@@ -68,7 +68,7 @@ builder, comprueba que existe exactamente un ZIP esperado no vacío y sube
 únicamente ese ZIP como artifact
 `TubeVault-AAAA.MM.REVISION-win-x64-portable`.
 Los artifacts son temporales y no equivalen a releases públicas.
-La simplificación actual de CI deberá validarse en GitHub tras su envío.
+La CI portable de `2026.09.008` ya fue validada en GitHub.
 
 ## Validación y publicación
 
@@ -85,8 +85,16 @@ Solo la aprobación explícita del usuario autoriza crear tag y GitHub Release.
    código validado, adjuntando únicamente el ZIP Portable.
 9. Mantener tag, release y asset publicado inmutables.
 
-`2026.09.008` se prepara como **public preview / pre-release**; todavía no está
-publicada. Sus notas están en [docs/releases/2026.09.008.md](releases/2026.09.008.md).
+`2026.09.008` fue publicada como **Public Preview / Pre-release** y permanece
+histórica e inmutable. `2026.09.009` se prepara como la primera **Stable / Latest**,
+sin cambios funcionales respecto a 008. Sus notas están en
+[2026.09.008](releases/2026.09.008.md) y [2026.09.009](releases/2026.09.009.md).
+
+La estrategia mantiene una Stable como referencia pública. Las versiones de
+desarrollo posteriores pueden publicarse como Pre-release; cuando una versión
+esté suficientemente validada, sustituirá a la anterior como nueva Stable / Latest.
+La publicación de 009 será la primera aplicación de esta estrategia. Cambiar
+Latest no modifica los tags, releases ni assets ya publicados.
 No presentar la build como firmada: consulte la
 [Code signing policy](CODE_SIGNING_POLICY.md).
 

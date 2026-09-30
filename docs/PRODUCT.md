@@ -98,6 +98,7 @@ No muestra stderr, stack traces ni comandos. El detalle técnico se guarda en un
 
 ## Apariencia e idioma
 
+- Icono propio de TubeVault y wordmark integrado en la cabecera, adaptado a los temas Claro y Oscuro.
 - Tema Claro.
 - Tema Oscuro azul, sin negro puro.
 - Interfaz completa en Español y English.
