@@ -26,6 +26,8 @@
 - GitHub Actions operativo mediante `.github/workflows/ci.yml`.
 - Primera ejecución completada correctamente en un runner Windows alojado por GitHub.
 - Publish self-contained `win-x64` y artifact `TubeVault-win-x64` generados correctamente.
+- CI preparada para generar el MSI `win-x64` como un segundo artifact independiente y versionado.
+- Los artifacts de GitHub Actions son temporales; todavía no son releases públicas ni están firmados.
 - Artifact probado manualmente en Windows: bootstrap de dependencias, análisis real y descarga MP3 real correctos.
 - Separación de datos instalada/portable mediante `portable.flag`; el publish normal no incluye el marcador.
 - Primera infraestructura MSI de prueba con WiX 5.0.2 y script de build reproducible.

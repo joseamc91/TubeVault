@@ -29,5 +29,9 @@ El script publica la aplicación self-contained `win-x64` en un staging bajo
 `artifacts/`, valida el payload y genera el MSI en `artifacts/installer/`.
 `portable.flag` no forma parte del publish normal ni del instalador.
 
+El workflow `TubeVault CI` ejecuta este script y sube el MSI como un artifact
+independiente del publish de la aplicación. Los artifacts de GitHub Actions son
+temporales: no constituyen una release pública ni firmada.
+
 Siguen pendientes la UI del instalador, GitHub Releases, la distribución pública
 y la firma de código.
