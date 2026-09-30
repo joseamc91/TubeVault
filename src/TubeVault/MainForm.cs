@@ -13,6 +13,11 @@ public sealed class MainForm : Form
     private readonly ToolTip toolTip = new();
 
     private readonly HeaderActionButton settingsButton = new();
+    private readonly PictureBox brandWordmark = new();
+    private readonly Image wordmarkLight = LoadBrandingImage("TubeVault.Branding.Wordmark-Light.png");
+    private readonly Image wordmarkDark = LoadBrandingImage("TubeVault.Branding.Wordmark-Dark.png");
+    private readonly Icon applicationIcon = LoadBrandingIcon();
+    private bool brandingDisposed;
 
     private readonly VerticallyCenteredTextBox urlTextBox = new();
     private readonly RoundedButton analyzeButton = new();
@@ -153,9 +158,42 @@ public sealed class MainForm : Form
         base.OnFormClosed(e);
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && !brandingDisposed)
+        {
+            brandWordmark.Image = null;
+            Icon = null;
+            wordmarkLight.Dispose();
+            wordmarkDark.Dispose();
+            applicationIcon.Dispose();
+            brandingDisposed = true;
+        }
+
+        base.Dispose(disposing);
+    }
+
+    private static Image LoadBrandingImage(string resourceName)
+    {
+        using var stream = typeof(MainForm).Assembly.GetManifestResourceStream(resourceName)
+            ?? throw new InvalidOperationException($"Recurso gráfico no encontrado: {resourceName}");
+        using var image = Image.FromStream(stream);
+        // El bitmap propio permite cerrar el stream sin afectar al PictureBox.
+        return new Bitmap(image);
+    }
+
+    private static Icon LoadBrandingIcon()
+    {
+        using var stream = typeof(MainForm).Assembly.GetManifestResourceStream("TubeVault.Branding.AppIcon.ico")
+            ?? throw new InvalidOperationException("Recurso gráfico no encontrado: AppIcon.ico");
+        using var icon = new Icon(stream);
+        return (Icon)icon.Clone();
+    }
+
     private void ConfigureWindow()
     {
         Text = "TubeVault";
+        Icon = applicationIcon;
         StartPosition = FormStartPosition.CenterScreen;
         ClientSize = new Size(820, 760);
         MinimumSize = new Size(720, 800);
@@ -203,19 +241,18 @@ public sealed class MainForm : Form
         header.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         header.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
-        var title = new Label
-        {
-            AutoSize = true,
-            Font = new Font("Segoe UI Semibold", 24F),
-            Text = "TubeVault",
-            Margin = Padding.Empty
-        };
+        brandWordmark.Size = new Size(230, 48);
+        brandWordmark.SizeMode = PictureBoxSizeMode.Zoom;
+        brandWordmark.Anchor = AnchorStyles.Left;
+        brandWordmark.Margin = Padding.Empty;
+        brandWordmark.BackColor = Color.Transparent;
+        brandWordmark.AccessibleName = "TubeVault";
 
         ConfigureHeaderButton(settingsButton, HeaderActionIcon.Settings, RoundedCorners.All);
         settingsButton.Anchor = AnchorStyles.Right;
         settingsButton.Click += SettingsButton_Click;
 
-        header.Controls.Add(title, 0, 0);
+        header.Controls.Add(brandWordmark, 0, 0);
         header.Controls.Add(settingsButton, 1, 0);
         return header;
     }
@@ -1000,6 +1037,8 @@ public sealed class MainForm : Form
     private void ApplyTheme()
     {
         ThemeService.Apply(this, currentTheme);
+        brandWordmark.Image = currentTheme == AppTheme.Dark ? wordmarkDark : wordmarkLight;
+        brandWordmark.BackColor = Color.Transparent;
 
         var colors = ThemeService.GetColors(currentTheme);
         foreach (var button in new[]
