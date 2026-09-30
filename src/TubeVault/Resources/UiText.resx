@@ -69,6 +69,8 @@
   <data name="SetupRepairing" xml:space="preserve"><value>Reparando componentes de TubeVault...</value></data>
   <data name="SetupCompleted" xml:space="preserve"><value>Preparación completada.</value></data>
   <data name="SetupFailed" xml:space="preserve"><value>No se han podido descargar los componentes necesarios. Comprueba tu conexión a Internet e inténtalo de nuevo.</value></data>
+  <data name="SetupInitialFailed" xml:space="preserve"><value>No se han podido preparar los componentes necesarios.&#xA;&#xA;Comprueba tu conexión a Internet e inténtalo de nuevo.</value></data>
+  <data name="SetupFirstPreparationHint" xml:space="preserve"><value>Esto solo será necesario la primera vez.</value></data>
   <data name="SetupRetry" xml:space="preserve"><value>Reintentar</value></data>
   <data name="SetupExit" xml:space="preserve"><value>Salir</value></data>
   <data name="TryAgain" xml:space="preserve"><value>Inténtalo de nuevo.</value></data>

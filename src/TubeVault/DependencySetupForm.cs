@@ -11,7 +11,9 @@ internal sealed class DependencySetupForm : Form
     private readonly TextService text;
     private readonly AppTheme theme;
     private readonly DependencyBootstrapService bootstrap;
+    private readonly bool isInitialPreparation;
     private readonly CancellationTokenSource cancellation = new();
+    private readonly Label firstPreparationLabel = new();
     private readonly Label statusLabel = new();
     private readonly Label progressDetailsLabel = new();
     private readonly ProgressBar progressBar = new();
@@ -23,14 +25,16 @@ internal sealed class DependencySetupForm : Form
     public DependencySetupForm(
         TextService text,
         AppTheme theme,
-        DependencyBootstrapService bootstrap)
+        DependencyBootstrapService bootstrap,
+        bool isInitialPreparation)
     {
         this.text = text;
         this.theme = theme;
         this.bootstrap = bootstrap;
+        this.isInitialPreparation = isInitialPreparation;
 
         ConfigureWindow();
-        BuildInterface();
+        BuildInterface(isInitialPreparation);
         ApplyTheme();
         Shown += async (_, _) => await PrepareAsync();
     }
@@ -65,15 +69,16 @@ internal sealed class DependencySetupForm : Form
         Font = new Font("Segoe UI", 10F);
     }
 
-    private void BuildInterface()
+    private void BuildInterface(bool isInitialPreparation)
     {
         var root = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
             Padding = new Padding(28, 24, 28, 22),
             ColumnCount = 1,
-            RowCount = 6
+            RowCount = 7
         };
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -88,6 +93,12 @@ internal sealed class DependencySetupForm : Form
             Font = new Font("Segoe UI Semibold", 18F),
             Margin = new Padding(0, 0, 0, 16)
         };
+
+        firstPreparationLabel.AutoSize = true;
+        firstPreparationLabel.Text = text.Get("SetupFirstPreparationHint");
+        firstPreparationLabel.Tag = "secondary";
+        firstPreparationLabel.Margin = new Padding(0, 0, 0, 12);
+        firstPreparationLabel.Visible = isInitialPreparation;
 
         statusLabel.Dock = DockStyle.Fill;
         statusLabel.Text = text.Get("SetupChecking");
@@ -112,7 +123,11 @@ internal sealed class DependencySetupForm : Form
         actionsPanel.Visible = false;
 
         ConfigureButton(retryButton, text.Get("SetupRetry"), primary: true);
-        retryButton.Click += async (_, _) => await PrepareAsync();
+        retryButton.Click += async (_, _) =>
+        {
+            firstPreparationLabel.Visible = false;
+            await PrepareAsync();
+        };
         ConfigureButton(exitButton, text.Get("SetupExit"), primary: false);
         exitButton.Click += (_, _) =>
         {
@@ -123,10 +138,11 @@ internal sealed class DependencySetupForm : Form
         actionsPanel.Controls.Add(exitButton);
 
         root.Controls.Add(title, 0, 0);
-        root.Controls.Add(statusLabel, 0, 1);
-        root.Controls.Add(progressDetailsLabel, 0, 2);
-        root.Controls.Add(progressBar, 0, 3);
-        root.Controls.Add(actionsPanel, 0, 5);
+        root.Controls.Add(firstPreparationLabel, 0, 1);
+        root.Controls.Add(statusLabel, 0, 2);
+        root.Controls.Add(progressDetailsLabel, 0, 3);
+        root.Controls.Add(progressBar, 0, 4);
+        root.Controls.Add(actionsPanel, 0, 6);
         Controls.Add(root);
     }
 
@@ -162,7 +178,8 @@ internal sealed class DependencySetupForm : Form
         }
         catch
         {
-            statusLabel.Text = text.Get("SetupFailed");
+            statusLabel.Text = text.Get(
+                isInitialPreparation ? "SetupInitialFailed" : "SetupFailed");
             progressDetailsLabel.Visible = false;
             progressBar.Visible = false;
             actionsPanel.Visible = true;

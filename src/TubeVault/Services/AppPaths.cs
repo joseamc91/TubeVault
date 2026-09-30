@@ -9,7 +9,7 @@ internal static class AppPaths
         File.Exists(Path.Combine(AppDirectory, "portable.flag"));
 
     public static string DataDirectory { get; } = IsPortable
-        ? AppDirectory
+        ? Path.Combine(AppDirectory, "data")
         : Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "TubeVault");

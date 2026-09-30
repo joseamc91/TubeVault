@@ -1212,10 +1212,15 @@ public sealed class MainForm : Form
 
             if (!dependenciesValid)
             {
+                var isInitialPreparation =
+                    !File.Exists(AppPaths.YtDlpPath) &&
+                    !File.Exists(AppPaths.FfmpegPath) &&
+                    !File.Exists(AppPaths.FfprobePath);
                 using var setup = new DependencySetupForm(
                     textService,
                     currentTheme,
-                    dependencyBootstrapService);
+                    dependencyBootstrapService,
+                    isInitialPreparation);
                 var setupResult = setup.ShowDialog(this);
 
                 if (setupResult != DialogResult.OK)
