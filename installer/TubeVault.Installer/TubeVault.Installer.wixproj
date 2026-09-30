@@ -4,6 +4,7 @@
     <OutputType>Package</OutputType>
     <InstallerPlatform>x64</InstallerPlatform>
     <OutputName>TubeVault-$(FullVersion)-win-x64</OutputName>
+    <SuppressIces>ICE38;ICE64;ICE91</SuppressIces>
     <DefineConstants>$(DefineConstants);PayloadDir=$(PayloadDir);FullVersion=$(FullVersion);MsiVersion=$(MsiVersion)</DefineConstants>
   </PropertyGroup>
 

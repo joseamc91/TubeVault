@@ -50,7 +50,7 @@
           Id="TubeVaultStartMenuShortcutEntry"
           Name="TubeVault"
           Description="TubeVault"
-          Target="[#TubeVaultExe]"
+          Target="[INSTALLFOLDER]TubeVault.exe"
           WorkingDirectory="INSTALLFOLDER" />
         <RegistryValue
           Root="HKCU"

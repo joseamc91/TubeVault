@@ -33,5 +33,11 @@ El workflow `TubeVault CI` ejecuta este script y sube el MSI como un artifact
 independiente del publish de la aplicación. Los artifacts de GitHub Actions son
 temporales: no constituyen una release pública ni firmada.
 
+La CI mantiene activa la validación MSI y suprime únicamente `ICE38`, `ICE64` e
+`ICE91`. Son excepciones conocidas de la instalación estrictamente per-user bajo
+`LocalAppData` combinada con el harvesting mediante `<Files>`; el ciclo real de
+instalación y desinstalación ya fue probado manualmente. El resto de validaciones
+ICE permanece activo.
+
 Siguen pendientes la UI del instalador, GitHub Releases, la distribución pública
 y la firma de código.
