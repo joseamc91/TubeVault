@@ -21,6 +21,8 @@ tools/
 config/
 logs/
 dist/
+installer/
+scripts/
 ```
 
 - `src/TubeVault/`: código de la aplicación.
@@ -32,6 +34,8 @@ dist/
 - `config/`: configuración portable.
 - `logs/`: logs técnicos diarios.
 - `dist/`: publicaciones portables separadas por versión.
+- `installer/`: proyecto WiX 5.0.2, separado de `TubeVault.sln`.
+- `scripts/`: construcción reproducible del MSI desde un publish temporal.
 
 ## Composición de la aplicación
 
@@ -66,6 +70,17 @@ actualizaciones y reparación. Estas acciones son inmediatas e independientes de
 resultado de Ajustes. Desde `SettingsForm` también se abre `AboutForm`.
 
 No existe contenedor de inyección de dependencias. Las dependencias se crean explícitamente porque el tamaño actual no justifica infraestructura adicional.
+
+## Instalador
+
+`scripts/build-installer.ps1` obtiene `InformationalVersion`, publica la aplicación
+self-contained `win-x64` en `artifacts/` y construye
+`installer/TubeVault.Installer` con WiX 5.0.2. El MSI instala únicamente los
+binarios y documentos legales bajo `%LocalAppData%\Programs\TubeVault`; los datos
+runtime permanecen separados en `%LocalAppData%\TubeVault`.
+
+El proyecto WiX no pertenece a `TubeVault.sln`, no usa custom actions y no incluye
+`portable.flag`, herramientas descargadas ni datos runtime.
 
 ## Modelos
 

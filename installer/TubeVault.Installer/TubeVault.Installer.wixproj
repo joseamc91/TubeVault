@@ -1,0 +1,16 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <OutputName>TubeVault-$(FullVersion)-win-x64</OutputName>
+    <DefineConstants>$(DefineConstants);PayloadDir=$(PayloadDir);FullVersion=$(FullVersion);MsiVersion=$(MsiVersion)</DefineConstants>
+  </PropertyGroup>
+
+  <Target Name="ValidateInstallerProperties" BeforeTargets="Build">
+    <Error Condition="'$(PayloadDir)' == ''" Text="PayloadDir is required." />
+    <Error Condition="'$(FullVersion)' == ''" Text="FullVersion is required." />
+    <Error Condition="'$(MsiVersion)' == ''" Text="MsiVersion is required." />
+  </Target>
+
+</Project>

@@ -28,9 +28,11 @@
 - Publish self-contained `win-x64` y artifact `TubeVault-win-x64` generados correctamente.
 - Artifact probado manualmente en Windows: bootstrap de dependencias, análisis real y descarga MP3 real correctos.
 - Separación de datos instalada/portable mediante `portable.flag`; el publish normal no incluye el marcador.
+- Primera infraestructura MSI de prueba con WiX 5.0.2 y script de build reproducible.
 
 ## Pendiente
 
 - GitHub Releases.
-- Instalador y distribución pública.
+- Validación manual de instalación/desinstalación y futura UI del instalador.
+- Distribución pública del MSI mediante GitHub Releases.
 - Configuración operativa de SignPath y firma de código.

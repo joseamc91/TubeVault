@@ -9,7 +9,8 @@ técnicas.
 - Windows 10/11 x64 compatible con .NET 10.
 - .NET SDK `10.0.401`. `global.json` fija el SDK y admite únicamente parches
   compatibles de su misma banda.
-- No son necesarios paquetes NuGet adicionales para el proyecto actual.
+- La aplicación no usa `PackageReference`. El instalador restaura por separado
+  `WixToolset.Sdk/5.0.2` como dependencia de build.
 
 Desde la raíz del proyecto:
 
@@ -29,6 +30,8 @@ La salida de desarrollo se genera en
   logs, temas y localización.
 - `src/TubeVault/Controls/`: controles WinForms reutilizables.
 - `src/TubeVault/Resources/`: textos localizados en español e inglés.
+- `installer/TubeVault.Installer/`: proyecto WiX separado de la solución.
+- `scripts/`: automatización reproducible del instalador.
 - `docs/`: producto, arquitectura y proceso de release.
 
 Consulta `AGENTS.md`, `ARCHITECTURE.md` y `docs/PRODUCT.md` antes de cambiar el
@@ -73,6 +76,6 @@ modificar `dist/`, ni incorporar `yt-dlp.exe`, `ffmpeg.exe` o `ffprobe.exe`.
 No ejecutes `dotnet publish` durante el desarrollo normal. La publicación se
 reserva al cierre explícito de una versión según `docs/RELEASE_PROCESS.md`.
 
-Actualmente no existe integración continua ni firma automatizada en el
-repositorio. GitHub Actions y SignPath son infraestructura futura, no requisitos
-operativos del flujo actual.
+GitHub Actions valida la aplicación. La publicación del instalador y la firma con
+SignPath siguen siendo infraestructura futura, no requisitos operativos del flujo
+actual.

@@ -2,7 +2,7 @@
 
 [![TubeVault CI](https://github.com/joseamc91/TubeVault/actions/workflows/ci.yml/badge.svg)](https://github.com/joseamc91/TubeVault/actions/workflows/ci.yml)
 
-TubeVault es una aplicación portable para Windows que permite a usuarios no técnicos analizar enlaces de YouTube o YouTube Music y descargar su audio en MP3.
+TubeVault es una aplicación para Windows que permite a usuarios no técnicos analizar enlaces de YouTube o YouTube Music y descargar su audio en MP3.
 
 ## Tecnología y versión
 
@@ -10,7 +10,7 @@ TubeVault es una aplicación portable para Windows que permite a usuarios no té
 - .NET 10 para Windows (`net10.0-windows`).
 - Versión actual publicada: `2026.09.006`.
 - Publicación `win-x64` self-contained: no requiere instalar .NET.
-- Sin paquetes NuGet adicionales.
+- `TubeVault.csproj` no usa `PackageReference`; el proyecto separado del instalador usa `WixToolset.Sdk/5.0.2` como dependencia de build.
 - Licencia: `GPL-3.0-only`.
 - Repositorio oficial: [github.com/joseamc91/TubeVault](https://github.com/joseamc91/TubeVault), rama principal `main`.
 - Componentes de terceros: TubeVault utiliza yt-dlp, FFmpeg y el runtime .NET. Consulte [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) para información sobre licencias y código fuente.
@@ -199,6 +199,12 @@ Cada versión se publica en una carpeta independiente. Para 2026.09.006:
 
 Un paquete portable debe añadir expresamente `portable.flag`; su `config` y `logs` se entregan vacíos y se crean dentro de la propia carpeta en el primer arranque.
 
+## Instalador MSI de prueba
+
+La infraestructura MSI se construye por separado con WiX Toolset 5.0.2 y no forma
+parte de `TubeVault.sln`. Consulte [docs/INSTALLER.md](docs/INSTALLER.md) para el
+modelo per-user y el comando de build. Todavía no es una release pública.
+
 ## Compatibilidad
 
 - Objetivo principal: Windows 11 x64.
@@ -208,7 +214,7 @@ Un paquete portable debe añadir expresamente `portable.flag`; su `config` y `lo
 
 ## Limitaciones conocidas
 
-- No hay instalador ni firma digital.
+- El MSI actual es solo de prueba; todavía no hay instalador público ni firma digital.
 - No hay actualización automática de TubeVault. Las actualizaciones de los componentes requieren una acción explícita.
 - No se incluyen cookies ni autenticación.
 - No se incrustan carátulas ni se corrige metadata mediante reglas propias.
@@ -234,6 +240,7 @@ dotnet publish .\src\TubeVault\TubeVault.csproj -c Release -r win-x64 --self-con
 - [Arquitectura](ARCHITECTURE.md)
 - [Producto](docs/PRODUCT.md)
 - [Proceso de release](docs/RELEASE_PROCESS.md)
+- [Instalador MSI](docs/INSTALLER.md)
 
 ## Documentación pública
 
