@@ -205,6 +205,12 @@ La infraestructura MSI se construye por separado con WiX Toolset 5.0.2 y no form
 parte de `TubeVault.sln`. Consulte [docs/INSTALLER.md](docs/INSTALLER.md) para el
 modelo per-user y el comando de build. Todavía no es una release pública.
 
+## Code signing policy
+
+Consulte la [Code signing policy](docs/CODE_SIGNING_POLICY.md). Las builds
+actuales todavía están sin firmar; SignPath Foundation es el proveedor previsto,
+sujeto a la aprobación del proyecto.
+
 ## Compatibilidad
 
 - Objetivo principal: Windows 11 x64.
@@ -250,4 +256,4 @@ dotnet publish .\src\TubeVault\TubeVault.csproj -c Release -r win-x64 --self-con
 - [Contribuciones](CONTRIBUTING.md)
 - [Privacidad](PRIVACY.md)
 - [Uso responsable](docs/LEGAL.md)
-- [Política futura de firma](docs/CODE_SIGNING_POLICY.md)
+- [Code signing policy](docs/CODE_SIGNING_POLICY.md)

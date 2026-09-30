@@ -1,37 +1,74 @@
-# Política de firma de código
+# Code signing policy
 
 ## Estado actual
 
-TubeVault todavía no está firmado digitalmente y no dispone de un pipeline de
-firma. Las releases actuales no deben presentarse como artefactos firmados ni
-verificados por SignPath.
+TubeVault todavía no ha sido aceptado por SignPath Foundation. No existe un
+certificado asignado al proyecto ni una integración de firma activa, y ninguna
+build o release actual debe presentarse como firmada o verificada por SignPath.
 
-## Objetivo futuro
+GitHub Actions genera actualmente el publish `win-x64` y el instalador MSI como
+artifacts temporales y sin firma. Antes de solicitar la participación de
+SignPath Foundation, el proyecto publicará una primera release sin firma en la
+misma forma que se pretende firmar posteriormente.
 
-El repositorio público oficial está disponible en
-<https://github.com/joseamc91/TubeVault>. Como evolución futura, se pretende:
+## Proveedor previsto
 
-- generar builds oficiales mediante GitHub Actions;
-- solicitar firma a SignPath Foundation si el proyecto resulta aprobado;
-- mantener trazabilidad entre commit, tag, build y artefacto publicado;
-- requerir aprobación manual antes de publicar una release firmada;
-- firmar únicamente el código y los artefactos propios de TubeVault.
+Si TubeVault resulta aprobado, las futuras releases firmadas utilizarán el
+servicio previsto por esta atribución:
 
-yt-dlp, FFmpeg y ffprobe se descargan desde sus fuentes configuradas durante la
-ejecución. No se firmarán ni se presentarán como binarios propios de TubeVault.
+> Free code signing provided by SignPath.io, certificate by SignPath Foundation.
 
-## Principios
+La atribución identifica al proveedor previsto; no implica que TubeVault ya
+haya sido aprobado, disponga de certificado o publique binarios firmados.
 
-- Solo podrán firmarse artefactos oficiales generados desde el repositorio
-  público y asociados a una versión identificable.
-- Los builds de release deberán ejecutarse sobre infraestructura confiable y con
-  pasos documentados y reproducibles.
-- Las dependencias de terceros permanecerán separadas de los artefactos propios.
-- Las credenciales y secretos de firma no se almacenarán en el repositorio ni en
-  logs o artefactos de build.
-- Cada release firmada deberá corresponder a un tag o versión y conservar su
-  trazabilidad hasta el código fuente.
-- Una release requerirá aprobación explícita antes de su distribución pública.
+## Roles del proyecto
 
-Esta política describe una intención de proyecto. No afirma que GitHub Actions,
-SignPath, certificados ni workflows de firma estén configurados actualmente.
+TubeVault es actualmente un proyecto mantenido por una sola persona:
+
+- **Author / Committer:** `joseamc91`.
+- **Reviewer:** `joseamc91`.
+- **Approver for signing requests:** `joseamc91`.
+
+No existen equipos o colaboradores adicionales que desempeñen estos roles. Las
+contribuciones externas deberán ser revisadas por el mantenedor antes de
+integrarse.
+
+## Binarios previstos para firma
+
+Una futura configuración de SignPath firmará únicamente binarios propios
+generados desde el código y los scripts mantenidos por TubeVault:
+
+- `TubeVault.exe`;
+- `TubeVault.dll`;
+- el instalador MSI de TubeVault.
+
+No se firmarán con el certificado de TubeVault:
+
+- `yt-dlp.exe`;
+- `ffmpeg.exe`;
+- `ffprobe.exe`;
+- binarios o librerías pertenecientes a proyectos upstream.
+
+El MSI actual no incluye yt-dlp, FFmpeg ni ffprobe. Todavía no existe una
+configuración de deep signing.
+
+## Trazabilidad y aprobación
+
+- Los artefactos oficiales deberán generarse desde el repositorio público y
+  conservar trazabilidad entre commit, tag, build y release.
+- Cada futura solicitud de firma de una release requerirá aprobación manual.
+- El approver actual para esas solicitudes será `joseamc91`.
+- Las credenciales y secretos de firma no se almacenarán en el repositorio, los
+  logs ni los artifacts.
+- La firma solo se aplicará a releases oficiales identificables; los artifacts
+  temporales de CI no son releases públicas.
+
+Estas reglas describen la política prevista. La aprobación manual y la firma
+todavía no están implementadas técnicamente.
+
+## Privacidad
+
+Consulte la [política de privacidad](../PRIVACY.md). TubeVault no opera un
+backend propio ni incluye telemetría o analytics propios. Solo realiza las
+conexiones necesarias para las funciones solicitadas por el usuario y para las
+comprobaciones o actualizaciones de componentes descritas en esa política.
