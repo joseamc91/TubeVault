@@ -110,6 +110,7 @@ public sealed class MainForm : Form
     private AppTheme currentTheme;
     private AppLanguage currentLanguage;
     private AudioQuality selectedAudioQuality = AudioQuality.Medium;
+    private bool embedCoverArtwork = true;
 
     public MainForm()
     {
@@ -1009,6 +1010,7 @@ public sealed class MainForm : Form
         destinationPath = settingsService.LoadDestinationFolder();
         destinationTextBox.Text = destinationPath;
         SelectAudioQuality(settingsService.LoadAudioQuality(), save: false);
+        embedCoverArtwork = settingsService.LoadEmbedCoverArtwork();
         loadingSettings = false;
     }
 
@@ -1212,6 +1214,7 @@ public sealed class MainForm : Form
             textService,
             currentTheme,
             currentLanguage,
+            embedCoverArtwork,
             availableUpdate,
             availableFfmpegUpdate,
             ytDlpUpdateService,
@@ -1234,6 +1237,12 @@ public sealed class MainForm : Form
 
         var themeChanged = settings.SelectedTheme != currentTheme;
         var languageChanged = settings.SelectedLanguage != currentLanguage;
+
+        if (settings.SelectedEmbedCoverArtwork != embedCoverArtwork)
+        {
+            embedCoverArtwork = settings.SelectedEmbedCoverArtwork;
+            settingsService.SaveEmbedCoverArtwork(embedCoverArtwork);
+        }
 
         if (themeChanged)
         {
@@ -1682,6 +1691,7 @@ public sealed class MainForm : Form
                 destinationPath,
                 playlistFolderTextBox.Text,
                 GetSelectedAudioQuality(),
+                embedCoverArtwork,
                 progress,
                 downloadCancellation.Token);
 

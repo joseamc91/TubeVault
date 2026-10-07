@@ -162,4 +162,7 @@
   <data name="TubeVaultNotChecked" xml:space="preserve"><value>No update check has been performed yet.</value></data>
   <data name="TubeVaultUpdateCheckFailed" xml:space="preserve"><value>TubeVault updates could not be checked.</value></data>
   <data name="TubeVaultReleaseOpenFailed" xml:space="preserve"><value>The release could not be opened in your browser.</value></data>
+  <data name="SettingsDownloads" xml:space="preserve"><value>Downloads</value></data>
+  <data name="SettingsEmbedCoverArtwork" xml:space="preserve"><value>Embed cover art in MP3 files</value></data>
+  <data name="SettingsCoverArtworkDescription" xml:space="preserve"><value>Uses the content thumbnail, cropped to a square cover.</value></data>
 </root>

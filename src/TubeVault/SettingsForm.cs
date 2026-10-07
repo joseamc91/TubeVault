@@ -18,17 +18,20 @@ internal sealed class SettingsForm : Form
     private readonly RoundedButton lightButton = new();
     private readonly RoundedButton darkButton = new();
     private readonly ComboBox languageComboBox = new();
+    private readonly CheckBox embedCoverArtworkCheckBox = new();
     private readonly HeaderActionButton componentsButton = new();
     private readonly HeaderActionButton aboutButton = new();
     private readonly RoundedButton acceptButton = new();
     private readonly RoundedButton cancelButton = new();
     private AppTheme pendingTheme;
     private AppLanguage pendingLanguage;
+    private bool pendingEmbedCoverArtwork;
 
     public SettingsForm(
         TextService text,
         AppTheme theme,
         AppLanguage language,
+        bool embedCoverArtwork,
         YtDlpUpdateInfo? availableUpdate,
         FfmpegUpdateInfo? availableFfmpegUpdate,
         YtDlpUpdateService updateService,
@@ -42,6 +45,7 @@ internal sealed class SettingsForm : Form
         displayTheme = theme;
         pendingTheme = theme;
         pendingLanguage = language;
+        pendingEmbedCoverArtwork = embedCoverArtwork;
         AvailableUpdate = availableUpdate;
         AvailableFfmpegUpdate = availableFfmpegUpdate;
         this.updateService = updateService;
@@ -63,6 +67,8 @@ internal sealed class SettingsForm : Form
 
     public AppLanguage SelectedLanguage => pendingLanguage;
 
+    public bool SelectedEmbedCoverArtwork => pendingEmbedCoverArtwork;
+
     public YtDlpUpdateInfo? AvailableUpdate { get; private set; }
 
     public FfmpegUpdateInfo? AvailableFfmpegUpdate { get; private set; }
@@ -80,7 +86,7 @@ internal sealed class SettingsForm : Form
     {
         Text = text.Get("SettingsTitle");
         StartPosition = FormStartPosition.CenterParent;
-        ClientSize = new Size(520, 560);
+        ClientSize = new Size(520, 660);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
@@ -96,7 +102,7 @@ internal sealed class SettingsForm : Form
             Dock = DockStyle.Fill,
             Padding = new Padding(28, 22, 28, 22),
             ColumnCount = 1,
-            RowCount = 10
+            RowCount = 12
         };
         root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
 
@@ -111,17 +117,19 @@ internal sealed class SettingsForm : Form
         root.Controls.Add(CreateSeparator(), 0, 2);
         root.Controls.Add(CreateLanguageSection(), 0, 3);
         root.Controls.Add(CreateSeparator(), 0, 4);
+        root.Controls.Add(CreateDownloadsSection(), 0, 5);
+        root.Controls.Add(CreateSeparator(), 0, 6);
         root.Controls.Add(CreateNavigationButton(
             componentsButton,
             "SettingsComponentsAndUpdates",
-            ComponentsButton_Click), 0, 5);
-        root.Controls.Add(CreateSeparator(), 0, 6);
+            ComponentsButton_Click), 0, 7);
+        root.Controls.Add(CreateSeparator(), 0, 8);
         root.Controls.Add(CreateNavigationButton(
             aboutButton,
             "SettingsAboutTubeVault",
-            async (_, _) => await OpenAboutAsync()), 0, 7);
-        root.Controls.Add(new Panel { Dock = DockStyle.Fill }, 0, 8);
-        root.Controls.Add(CreateActions(), 0, 9);
+            async (_, _) => await OpenAboutAsync()), 0, 9);
+        root.Controls.Add(new Panel { Dock = DockStyle.Fill }, 0, 10);
+        root.Controls.Add(CreateActions(), 0, 11);
 
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -133,6 +141,8 @@ internal sealed class SettingsForm : Form
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Insert(5, new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Insert(6, new RowStyle(SizeType.Absolute, 25F));
 
         Controls.Add(root);
         AcceptButton = acceptButton;
@@ -218,6 +228,22 @@ internal sealed class SettingsForm : Form
         button.UseVisualStyleBackColor = false;
         button.Click += click;
         return button;
+    }
+
+    private Control CreateDownloadsSection()
+    {
+        var section = CreateSection("SettingsDownloads", 2);
+        embedCoverArtworkCheckBox.AutoSize = true;
+        embedCoverArtworkCheckBox.Text = text.Get("SettingsEmbedCoverArtwork");
+        embedCoverArtworkCheckBox.Checked = pendingEmbedCoverArtwork;
+        embedCoverArtworkCheckBox.Margin = new Padding(0, 3, 0, 5);
+        embedCoverArtworkCheckBox.CheckedChanged += (_, _) =>
+            pendingEmbedCoverArtwork = embedCoverArtworkCheckBox.Checked;
+        section.Controls.Add(embedCoverArtworkCheckBox, 0, 1);
+        var description = CreateFieldLabel("SettingsCoverArtworkDescription");
+        description.MaximumSize = new Size(440, 0);
+        section.Controls.Add(description, 0, 2);
+        return section;
     }
 
     private Control CreateActions()

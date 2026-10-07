@@ -162,4 +162,7 @@
   <data name="TubeVaultNotChecked" xml:space="preserve"><value>Todavía no se han buscado actualizaciones.</value></data>
   <data name="TubeVaultUpdateCheckFailed" xml:space="preserve"><value>No se han podido comprobar las actualizaciones de TubeVault.</value></data>
   <data name="TubeVaultReleaseOpenFailed" xml:space="preserve"><value>No se ha podido abrir la release en el navegador.</value></data>
+  <data name="SettingsDownloads" xml:space="preserve"><value>Descargas</value></data>
+  <data name="SettingsEmbedCoverArtwork" xml:space="preserve"><value>Incrustar carátula en los MP3</value></data>
+  <data name="SettingsCoverArtworkDescription" xml:space="preserve"><value>Usa la miniatura del contenido, recortada a formato cuadrado.</value></data>
 </root>

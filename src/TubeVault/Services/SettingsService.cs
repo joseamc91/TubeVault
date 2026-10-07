@@ -61,6 +61,19 @@ internal sealed class SettingsService
         }
     }
 
+    public bool LoadEmbedCoverArtwork()
+    {
+        lock (settingsLock)
+        {
+            return LoadSettings().EmbedCoverArtwork;
+        }
+    }
+
+    public void SaveEmbedCoverArtwork(bool enabled)
+    {
+        UpdateSettings(settings => settings.EmbedCoverArtwork = enabled);
+    }
+
     public AppLanguage LoadLanguage()
     {
         lock (settingsLock)

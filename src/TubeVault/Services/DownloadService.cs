@@ -14,6 +14,7 @@ internal sealed class DownloadService
     private readonly YtDlpService ytDlp;
     private readonly DependencyService dependencies;
     private readonly MediaValidationService validation;
+    private readonly CoverArtworkService coverArtwork;
 
     public DownloadService(
         LogService log,
@@ -25,6 +26,7 @@ internal sealed class DownloadService
         this.ytDlp = ytDlp;
         this.dependencies = dependencies;
         this.validation = validation;
+        coverArtwork = new CoverArtworkService(log, dependencies, validation);
     }
 
     public async Task<DownloadResult> DownloadAsync(
@@ -34,6 +36,7 @@ internal sealed class DownloadService
         string destinationRoot,
         string playlistFolderName,
         AudioQuality audioQuality,
+        bool embedCoverArtwork,
         IProgress<DownloadProgress> progress,
         CancellationToken cancellationToken)
     {
@@ -65,6 +68,7 @@ internal sealed class DownloadService
                     items.Count,
                     destination,
                     audioQuality,
+                    embedCoverArtwork,
                     progress,
                     cancellationToken);
                 results.Add(result);
@@ -101,6 +105,7 @@ internal sealed class DownloadService
         int totalItems,
         string destination,
         AudioQuality audioQuality,
+        bool embedCoverArtwork,
         IProgress<DownloadProgress> progress,
         CancellationToken cancellationToken)
     {
@@ -152,6 +157,7 @@ internal sealed class DownloadService
                     totalItems,
                     workDirectory,
                     audioQuality,
+                    embedCoverArtwork,
                     progress,
                     cancellationToken);
 
@@ -169,7 +175,7 @@ internal sealed class DownloadService
                 }
 
                 var mp3Path = FindDownloadedMp3(workDirectory, processResult.OutputFilePath);
-                progress.Report(CreateProgress(item, totalItems, 100, isValidating: true));
+                progress.Report(CreateProgress(item, totalItems, embedCoverArtwork ? 99 : 100, isValidating: true));
 
                 if (mp3Path is null
                     || !await validation.IsValidMp3Async(mp3Path, cancellationToken))
@@ -183,6 +189,18 @@ internal sealed class DownloadService
                 {
                     log.Info("Omitir archivo existente", ("Elemento", item.Title), ("Archivo", finalPath));
                     return new DownloadItemResult(item.Title, DownloadItemStatus.AlreadyExists, finalPath);
+                }
+
+                if (embedCoverArtwork)
+                {
+                    if (await TryDownloadThumbnailAsync(item, workDirectory, cancellationToken))
+                        await coverArtwork.TryEmbedAsync(mp3Path, workDirectory, cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (File.Exists(finalPath))
+                    {
+                        log.Info("Omitir archivo existente", ("Elemento", item.Title), ("Archivo", finalPath));
+                        return new DownloadItemResult(item.Title, DownloadItemStatus.AlreadyExists, finalPath);
+                    }
                 }
 
                 File.Move(mp3Path, finalPath);
@@ -271,6 +289,7 @@ internal sealed class DownloadService
         int totalItems,
         string workDirectory,
         AudioQuality audioQuality,
+        bool embedCoverArtwork,
         IProgress<DownloadProgress> progress,
         CancellationToken cancellationToken)
     {
@@ -299,7 +318,7 @@ internal sealed class DownloadService
 
         return await RunProcessAsync(
             startInfo,
-            line => ProcessOutputLine(line, item, totalItems, progress),
+            line => ProcessOutputLine(line, item, totalItems, progress, embedCoverArtwork),
             cancellationToken);
     }
 
@@ -315,6 +334,47 @@ internal sealed class DownloadService
             StandardOutputEncoding = Encoding.UTF8,
             StandardErrorEncoding = Encoding.UTF8
         };
+    }
+
+    private async Task<bool> TryDownloadThumbnailAsync(DownloadWorkItem item, string workDirectory, CancellationToken cancellationToken)
+    {
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(45));
+        try
+        {
+            // Se consulta el vídeo individual después de validar el audio. Un fallo de thumbnail nunca lo reinicia.
+            var startInfo = CreateThumbnailStartInfo(item.SourceUrl, workDirectory);
+            var result = await RunProcessAsync(startInfo, null, timeout.Token);
+            if (result.ExitCode == 0) return true;
+            log.Info("Carátula no disponible", ("Elemento", item.Title), ("Código de salida", result.ExitCode));
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            log.Info("Carátula no disponible", ("Elemento", item.Title), ("Resultado", "Tiempo de espera agotado"));
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (Exception exception)
+        {
+            log.Error("Carátula no disponible", ("Elemento", item.Title), ("Detalle", exception.Message));
+        }
+        return false;
+    }
+
+    private ProcessStartInfo CreateThumbnailStartInfo(string sourceUrl, string workDirectory)
+    {
+        var startInfo = CreateYtDlpStartInfo();
+        AddCommonArguments(startInfo);
+        AddArgument(startInfo, "--skip-download");
+        AddArgument(startInfo, "--write-thumbnail");
+        AddArgument(startInfo, "--no-cache-dir");
+        AddArgument(startInfo, "--socket-timeout", "15");
+        AddArgument(startInfo, "--retries", "0");
+        AddArgument(startInfo, "--extractor-retries", "0");
+        AddArgument(startInfo, "--paths", workDirectory);
+        AddArgument(startInfo, "--paths", "thumbnail:" + workDirectory);
+        AddArgument(startInfo, "-o", "thumbnail:cover-source.%(ext)s");
+        AddArgument(startInfo, "--", sourceUrl);
+        return startInfo;
     }
 
     private static void AddCommonArguments(ProcessStartInfo startInfo)
@@ -385,7 +445,8 @@ internal sealed class DownloadService
         string line,
         DownloadWorkItem item,
         int totalItems,
-        IProgress<DownloadProgress> progress)
+        IProgress<DownloadProgress> progress,
+        bool embedCoverArtwork)
     {
         if (!line.StartsWith(ProgressPrefix, StringComparison.Ordinal))
         {
@@ -407,7 +468,7 @@ internal sealed class DownloadService
                 CultureInfo.InvariantCulture,
                 out var percentage))
         {
-            progress.Report(CreateProgress(item, totalItems, Math.Clamp(percentage, 0, 100)));
+            progress.Report(CreateProgress(item, totalItems, Math.Clamp(percentage, 0, embedCoverArtwork ? 99 : 100)));
         }
     }
 

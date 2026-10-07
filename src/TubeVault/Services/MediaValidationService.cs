@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text;
+using System.Text.Json;
 
 namespace TubeVault;
 
@@ -130,6 +131,43 @@ internal sealed class MediaValidationService
         startInfo.ArgumentList.Add("-of");
         startInfo.ArgumentList.Add("default=noprint_wrappers=1:nokey=1");
         startInfo.ArgumentList.Add(filePath);
+    }
+
+    public async Task<bool> HasValidCoverArtworkAsync(string filePath, CancellationToken cancellationToken)
+    {
+        try
+        {
+            if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0) return false;
+            using (var file = File.OpenRead(filePath))
+            {
+                var header = new byte[4];
+                if (file.Read(header, 0, header.Length) != header.Length
+                    || header[0] != 'I' || header[1] != 'D' || header[2] != '3' || header[3] != 4)
+                    return false;
+            }
+            var result = await MediaProcessRunner.RunAsync(dependencies.FfprobePath, [
+                "-v", "error", "-show_entries",
+                "stream=codec_type,codec_name,width,height:stream_disposition=attached_pic:stream_tags=comment",
+                "-of", "json", filePath
+            ], cancellationToken);
+            if (result.ExitCode != 0) return false;
+            using var document = JsonDocument.Parse(result.Output);
+            var streams = document.RootElement.GetProperty("streams").EnumerateArray().ToArray();
+            return streams.Any(stream => stream.GetProperty("codec_type").GetString() == "audio")
+                && streams.Any(stream => stream.GetProperty("codec_type").GetString() == "video"
+                    && stream.GetProperty("codec_name").GetString() == "mjpeg"
+                    && stream.GetProperty("width").GetInt32() is > 0 and <= 500
+                    && stream.GetProperty("width").GetInt32() == stream.GetProperty("height").GetInt32()
+                    && stream.GetProperty("disposition").GetProperty("attached_pic").GetInt32() == 1
+                    && stream.GetProperty("tags").GetProperty("comment").GetString()
+                        ?.Equals("Cover (front)", StringComparison.OrdinalIgnoreCase) == true);
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (Exception exception)
+        {
+            log.Error("Validar carátula MP3", ("Detalle", exception.ToString()));
+            return false;
+        }
     }
 
     private static void KillProcess(Process process)

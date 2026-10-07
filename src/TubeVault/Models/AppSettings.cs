@@ -6,6 +6,8 @@ internal sealed class AppSettings
 
     public AudioQuality AudioQuality { get; set; } = AudioQuality.Medium;
 
+    public bool EmbedCoverArtwork { get; set; } = true;
+
     public DateTimeOffset? LastYtDlpUpdateCheck { get; set; }
 
     public DateTimeOffset? LastFfmpegUpdateCheck { get; set; }
