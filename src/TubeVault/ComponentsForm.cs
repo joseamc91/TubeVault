@@ -233,6 +233,7 @@ internal sealed class ComponentsForm : Form
         {
             Dock = DockStyle.Fill,
             AutoSize = true,
+            Tag = "surface",
             ColumnCount = 1,
             RowCount = 5,
             Margin = Padding.Empty
@@ -252,6 +253,7 @@ internal sealed class ComponentsForm : Form
         {
             Dock = DockStyle.Fill,
             AutoSize = true,
+            Tag = "surface",
             WrapContents = false,
             Margin = new Padding(0, 9, 0, 0)
         };
