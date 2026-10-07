@@ -79,6 +79,7 @@ public sealed class MainForm : Form
     private readonly TextService textService;
     private readonly YtDlpService ytDlpService;
     private readonly YtDlpUpdateService ytDlpUpdateService;
+    private readonly TubeVaultUpdateService tubeVaultUpdateService;
     private readonly DependencyService dependencyService;
     private readonly DependencyBootstrapService dependencyBootstrapService;
     private readonly DownloadService downloadService;
@@ -87,11 +88,13 @@ public sealed class MainForm : Form
     private CancellationTokenSource? downloadCancellation;
     private CancellationTokenSource? updateCancellation;
     private CancellationTokenSource? ffmpegUpdateCancellation;
+    private readonly CancellationTokenSource tubeVaultUpdateCancellation = new();
     private CancellationTokenSource? thumbnailCancellation;
     private MediaInfo? currentMedia;
     private DownloadResult? lastDownloadResult;
     private YtDlpUpdateInfo? availableUpdate;
     private FfmpegUpdateInfo? availableFfmpegUpdate;
+    private TubeVaultUpdateInfo? availableTubeVaultUpdate;
     private string currentUrl = string.Empty;
     private string currentMessageKey = string.Empty;
     private string lastDownloadFolder = string.Empty;
@@ -118,6 +121,8 @@ public sealed class MainForm : Form
         textService.SetLanguage(currentLanguage);
         ytDlpService = new YtDlpService(logService);
         ytDlpUpdateService = new YtDlpUpdateService(logService, ytDlpService);
+        tubeVaultUpdateService = new TubeVaultUpdateService(logService);
+        tubeVaultUpdateService.CheckStateChanged += TubeVaultUpdateStateChanged;
         dependencyService = new DependencyService(logService);
         dependencyBootstrapService = new DependencyBootstrapService(
             ytDlpService,
@@ -152,6 +157,10 @@ public sealed class MainForm : Form
         updateCancellation?.Dispose();
         ffmpegUpdateCancellation?.Cancel();
         ffmpegUpdateCancellation?.Dispose();
+        tubeVaultUpdateCancellation.Cancel();
+        tubeVaultUpdateCancellation.Dispose();
+        tubeVaultUpdateService.CheckStateChanged -= TubeVaultUpdateStateChanged;
+        tubeVaultUpdateService.Dispose();
         thumbnailCancellation?.Cancel();
         thumbnailCancellation?.Dispose();
         ClearThumbnails();
@@ -1134,6 +1143,32 @@ public sealed class MainForm : Form
         }
     }
 
+    private async Task CheckTubeVaultUpdateIfDueAsync()
+    {
+        if (IsDisposed || !settingsService.ShouldCheckTubeVaultUpdate(DateTimeOffset.UtcNow)) return;
+
+        try
+        {
+            var result = await tubeVaultUpdateService.CheckAsync(tubeVaultUpdateCancellation.Token);
+            settingsService.SaveTubeVaultUpdateCheck(result.CheckedAt);
+        }
+        catch (OperationCanceledException)
+        {
+            // Tanto el cierre como el timeout son silenciosos; el servicio registra los fallos.
+        }
+        catch (Exception)
+        {
+            // El servicio ya ha guardado el detalle técnico; no se interrumpe el arranque.
+        }
+    }
+
+    private void TubeVaultUpdateStateChanged(object? sender, EventArgs e)
+    {
+        if (IsDisposed) return;
+        availableTubeVaultUpdate = tubeVaultUpdateService.LatestCheck;
+        RefreshUpdateNotification();
+    }
+
     private async Task CheckFfmpegUpdateIfDueAsync()
     {
         if (!settingsService.ShouldCheckFfmpegUpdate(DateTimeOffset.UtcNow))
@@ -1180,6 +1215,7 @@ public sealed class MainForm : Form
             availableUpdate,
             availableFfmpegUpdate,
             ytDlpUpdateService,
+            tubeVaultUpdateService,
             dependencyService,
             dependencyBootstrapService,
             settingsService,
@@ -1229,7 +1265,8 @@ public sealed class MainForm : Form
     {
         var hasPendingUpdate = UpdateNotification.HasPendingUpdate(
             availableUpdate,
-            availableFfmpegUpdate);
+            availableFfmpegUpdate,
+            availableTubeVaultUpdate);
         settingsButton.HasNotification = hasPendingUpdate;
         settingsButton.AccessibleDescription = hasPendingUpdate
             ? textService.Get("UpdatesAvailable")
@@ -1274,6 +1311,7 @@ public sealed class MainForm : Form
                 SetState(UiState.Initial);
             }
 
+            _ = CheckTubeVaultUpdateIfDueAsync();
             _ = CheckYtDlpUpdateIfDueAsync();
             _ = CheckFfmpegUpdateIfDueAsync();
         }

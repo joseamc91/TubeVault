@@ -18,10 +18,10 @@
     <Copyright>Copyright © 2026 joseamc91</Copyright>
     <RepositoryUrl>https://github.com/joseamc91/TubeVault</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>2026.9.9</Version>
-    <AssemblyVersion>2026.9.9.0</AssemblyVersion>
-    <FileVersion>2026.9.9.0</FileVersion>
-    <InformationalVersion>2026.09.009</InformationalVersion>
+    <Version>2026.10.1</Version>
+    <AssemblyVersion>2026.10.1.0</AssemblyVersion>
+    <FileVersion>2026.10.1.0</FileVersion>
+    <InformationalVersion>2026.10.001</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>

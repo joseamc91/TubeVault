@@ -154,4 +154,12 @@
   <data name="DeselectAll" xml:space="preserve"><value>Deseleccionar todo</value></data>
   <data name="PlaylistSelectionCount" xml:space="preserve"><value>{0} de {1} seleccionadas</value></data>
   <data name="SelectAtLeastOne" xml:space="preserve"><value>Selecciona al menos una canción para descargar.</value></data>
+  <data name="TubeVaultCheckUpdates" xml:space="preserve"><value>Buscar actualizaciones de TubeVault</value></data>
+  <data name="TubeVaultViewRelease" xml:space="preserve"><value>VER RELEASE</value></data>
+  <data name="TubeVaultUpToDate" xml:space="preserve"><value>TubeVault está actualizado.</value></data>
+  <data name="TubeVaultUpdateAvailable" xml:space="preserve"><value>Nueva versión de TubeVault disponible: {0}</value></data>
+  <data name="TubeVaultLocalNewer" xml:space="preserve"><value>Estás usando una versión más reciente que la última Stable.</value></data>
+  <data name="TubeVaultNotChecked" xml:space="preserve"><value>Todavía no se han buscado actualizaciones.</value></data>
+  <data name="TubeVaultUpdateCheckFailed" xml:space="preserve"><value>No se han podido comprobar las actualizaciones de TubeVault.</value></data>
+  <data name="TubeVaultReleaseOpenFailed" xml:space="preserve"><value>No se ha podido abrir la release en el navegador.</value></data>
 </root>

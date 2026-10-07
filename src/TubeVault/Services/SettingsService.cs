@@ -83,6 +83,28 @@ internal sealed class SettingsService
         }
     }
 
+    public bool ShouldCheckTubeVaultUpdate(DateTimeOffset now)
+    {
+        lock (settingsLock)
+        {
+            var lastCheck = LoadSettings().LastTubeVaultUpdateCheck;
+            return lastCheck is null || now - lastCheck.Value >= TimeSpan.FromHours(24);
+        }
+    }
+
+    public DateTimeOffset? LoadLastTubeVaultUpdateCheck()
+    {
+        lock (settingsLock)
+        {
+            return LoadSettings().LastTubeVaultUpdateCheck;
+        }
+    }
+
+    public void SaveTubeVaultUpdateCheck(DateTimeOffset checkedAt)
+    {
+        UpdateSettings(settings => settings.LastTubeVaultUpdateCheck = checkedAt);
+    }
+
     public DateTimeOffset? LoadLastYtDlpUpdateCheck()
     {
         lock (settingsLock)

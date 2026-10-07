@@ -10,6 +10,8 @@ internal sealed class AppSettings
 
     public DateTimeOffset? LastFfmpegUpdateCheck { get; set; }
 
+    public DateTimeOffset? LastTubeVaultUpdateCheck { get; set; }
+
     public AppTheme Theme { get; set; } = AppTheme.Light;
 
     public AppLanguage Language { get; set; } = AppLanguage.Spanish;

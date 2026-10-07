@@ -5,9 +5,11 @@ internal static class UpdateNotification
 {
     public static bool HasPendingUpdate(
         YtDlpUpdateInfo? ytDlp,
-        FfmpegUpdateInfo? ffmpeg)
+        FfmpegUpdateInfo? ffmpeg,
+        TubeVaultUpdateInfo? tubeVault)
     {
         return ytDlp?.IsUpdateAvailable == true
-               || ffmpeg?.IsUpdateAvailable == true;
+               || ffmpeg?.IsUpdateAvailable == true
+               || tubeVault?.IsUpdateAvailable == true;
     }
 }

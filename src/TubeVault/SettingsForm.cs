@@ -8,6 +8,7 @@ internal sealed class SettingsForm : Form
     private readonly TextService text;
     private readonly AppTheme displayTheme;
     private readonly YtDlpUpdateService updateService;
+    private readonly TubeVaultUpdateService tubeVaultUpdateService;
     private readonly DependencyService dependencyService;
     private readonly DependencyBootstrapService bootstrapService;
     private readonly SettingsService settingsService;
@@ -31,6 +32,7 @@ internal sealed class SettingsForm : Form
         YtDlpUpdateInfo? availableUpdate,
         FfmpegUpdateInfo? availableFfmpegUpdate,
         YtDlpUpdateService updateService,
+        TubeVaultUpdateService tubeVaultUpdateService,
         DependencyService dependencyService,
         DependencyBootstrapService bootstrapService,
         SettingsService settingsService,
@@ -43,6 +45,7 @@ internal sealed class SettingsForm : Form
         AvailableUpdate = availableUpdate;
         AvailableFfmpegUpdate = availableFfmpegUpdate;
         this.updateService = updateService;
+        this.tubeVaultUpdateService = tubeVaultUpdateService;
         this.dependencyService = dependencyService;
         this.bootstrapService = bootstrapService;
         this.settingsService = settingsService;
@@ -53,6 +56,7 @@ internal sealed class SettingsForm : Form
         ConfigureToolTips();
         ApplyTheme();
         RefreshComponentsNotification();
+        tubeVaultUpdateService.CheckStateChanged += TubeVaultUpdateStateChanged;
     }
 
     public AppTheme SelectedTheme => pendingTheme;
@@ -65,6 +69,7 @@ internal sealed class SettingsForm : Form
 
     protected override void OnFormClosed(FormClosedEventArgs e)
     {
+        tubeVaultUpdateService.CheckStateChanged -= TubeVaultUpdateStateChanged;
         cancellation.Cancel();
         cancellation.Dispose();
         toolTip.Dispose();
@@ -358,6 +363,7 @@ internal sealed class SettingsForm : Form
             AvailableUpdate,
             AvailableFfmpegUpdate,
             updateService,
+            tubeVaultUpdateService,
             dependencyService,
             bootstrapService,
             settingsService,
@@ -411,7 +417,8 @@ internal sealed class SettingsForm : Form
     {
         var hasPendingUpdate = UpdateNotification.HasPendingUpdate(
             AvailableUpdate,
-            AvailableFfmpegUpdate);
+            AvailableFfmpegUpdate,
+            tubeVaultUpdateService.LatestCheck);
         componentsButton.HasNotification = hasPendingUpdate;
         componentsButton.AccessibleDescription = hasPendingUpdate
             ? text.Get("UpdatesAvailable")
@@ -421,6 +428,11 @@ internal sealed class SettingsForm : Form
             text.Get(hasPendingUpdate
                 ? "UpdatesAvailable"
                 : "TooltipComponentsAndUpdates"));
+    }
+
+    private void TubeVaultUpdateStateChanged(object? sender, EventArgs e)
+    {
+        if (!IsDisposed) RefreshComponentsNotification();
     }
 
     private void ApplyTheme()

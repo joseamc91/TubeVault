@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Diagnostics;
 
 namespace TubeVault;
 
@@ -11,6 +12,7 @@ internal sealed class ComponentsForm : Form
     private readonly TextService text;
     private readonly AppTheme theme;
     private readonly YtDlpUpdateService updateService;
+    private readonly TubeVaultUpdateService tubeVaultUpdateService;
     private readonly DependencyService dependencyService;
     private readonly DependencyBootstrapService bootstrapService;
     private readonly SettingsService settingsService;
@@ -18,6 +20,11 @@ internal sealed class ComponentsForm : Form
     private readonly CancellationTokenSource cancellation = new();
     private readonly ToolTip toolTip = new();
     private readonly RoundedButton checkYtDlpButton = new();
+    private readonly RoundedButton checkTubeVaultButton = new();
+    private readonly RoundedButton viewReleaseButton = new();
+    private readonly Label tubeVaultVersionLabel = new();
+    private readonly Label tubeVaultLastCheckLabel = new();
+    private readonly Label tubeVaultStatusLabel = new();
     private readonly RoundedButton updateYtDlpButton = new();
     private readonly RoundedButton checkFfmpegButton = new();
     private readonly RoundedButton updateFfmpegButton = new();
@@ -37,6 +44,7 @@ internal sealed class ComponentsForm : Form
     private bool ytDlpAvailable = true;
     private bool ffmpegAvailable = true;
     private bool busy;
+    private bool tubeVaultCheckFailed;
 
     public ComponentsForm(
         TextService text,
@@ -44,6 +52,7 @@ internal sealed class ComponentsForm : Form
         YtDlpUpdateInfo? availableUpdate,
         FfmpegUpdateInfo? availableFfmpegUpdate,
         YtDlpUpdateService updateService,
+        TubeVaultUpdateService tubeVaultUpdateService,
         DependencyService dependencyService,
         DependencyBootstrapService bootstrapService,
         SettingsService settingsService,
@@ -56,6 +65,7 @@ internal sealed class ComponentsForm : Form
         installedYtDlpVersion = availableUpdate?.LocalVersion ?? "—";
         installedFfmpegVersion = availableFfmpegUpdate?.LocalVersion ?? "—";
         this.updateService = updateService;
+        this.tubeVaultUpdateService = tubeVaultUpdateService;
         this.dependencyService = dependencyService;
         this.bootstrapService = bootstrapService;
         this.settingsService = settingsService;
@@ -68,6 +78,7 @@ internal sealed class ComponentsForm : Form
         ConfigureToolTips();
         ApplyTheme();
         RefreshInformation();
+        tubeVaultUpdateService.CheckStateChanged += TubeVaultUpdateStateChanged;
         Shown += async (_, _) =>
         {
             try
@@ -87,6 +98,7 @@ internal sealed class ComponentsForm : Form
 
     protected override void OnFormClosed(FormClosedEventArgs e)
     {
+        tubeVaultUpdateService.CheckStateChanged -= TubeVaultUpdateStateChanged;
         cancellation.Cancel();
         cancellation.Dispose();
         toolTip.Dispose();
@@ -97,7 +109,7 @@ internal sealed class ComponentsForm : Form
     {
         Text = text.Get("SettingsComponentsAndUpdates");
         StartPosition = FormStartPosition.CenterParent;
-        ClientSize = new Size(560, 640);
+        ClientSize = new Size(560, 820);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
@@ -113,9 +125,10 @@ internal sealed class ComponentsForm : Form
             Dock = DockStyle.Fill,
             Padding = new Padding(26, 22, 26, 20),
             ColumnCount = 1,
-            RowCount = 6
+            RowCount = 7
         };
         root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -130,16 +143,17 @@ internal sealed class ComponentsForm : Form
             Font = new Font("Segoe UI Semibold", 20F),
             Margin = new Padding(0, 0, 0, 16)
         }, 0, 0);
-        root.Controls.Add(CreateYtDlpCard(), 0, 1);
-        root.Controls.Add(CreateFfmpegCard(), 0, 2);
-        root.Controls.Add(CreateRepairSection(), 0, 3);
+        root.Controls.Add(CreateTubeVaultCard(), 0, 1);
+        root.Controls.Add(CreateYtDlpCard(), 0, 2);
+        root.Controls.Add(CreateFfmpegCard(), 0, 3);
+        root.Controls.Add(CreateRepairSection(), 0, 4);
 
         ConfigureSecondaryButton(closeButton, text.Get("Close"));
         closeButton.Width = 112;
         closeButton.DialogResult = DialogResult.OK;
         closeButton.Anchor = AnchorStyles.Right;
         closeButton.Margin = Padding.Empty;
-        root.Controls.Add(closeButton, 0, 5);
+        root.Controls.Add(closeButton, 0, 6);
 
         Controls.Add(root);
         AcceptButton = closeButton;
@@ -163,6 +177,21 @@ internal sealed class ComponentsForm : Form
             ytDlpStatusLabel,
             checkYtDlpButton,
             updateYtDlpButton);
+    }
+
+    private Control CreateTubeVaultCard()
+    {
+        ConfigureStatusLabel(tubeVaultVersionLabel);
+        ConfigureStatusLabel(tubeVaultLastCheckLabel);
+        ConfigureResultLabel(tubeVaultStatusLabel);
+        tubeVaultStatusLabel.MaximumSize = new Size(460, 0);
+        ConfigureSecondaryButton(checkTubeVaultButton, text.Get("TubeVaultCheckUpdates"));
+        checkTubeVaultButton.Click += async (_, _) => await CheckTubeVaultAsync();
+        ConfigurePrimaryButton(viewReleaseButton, text.Get("TubeVaultViewRelease"));
+        viewReleaseButton.Click += (_, _) => OpenTubeVaultRelease();
+
+        return CreateComponentCard("TubeVault", tubeVaultVersionLabel, tubeVaultLastCheckLabel,
+            tubeVaultStatusLabel, checkTubeVaultButton, viewReleaseButton);
     }
 
     private Control CreateFfmpegCard()
@@ -369,6 +398,76 @@ internal sealed class ComponentsForm : Form
         finally { if (!IsDisposed) SetBusy(false); }
     }
 
+    private async Task CheckTubeVaultAsync()
+    {
+        if (busy) return;
+        SetBusy(true);
+        tubeVaultCheckFailed = false;
+        tubeVaultStatusLabel.Text = text.Get("SettingsCheckingUpdates");
+
+        try
+        {
+            var result = await tubeVaultUpdateService.CheckAsync(cancellation.Token);
+            settingsService.SaveTubeVaultUpdateCheck(result.CheckedAt);
+            if (!IsDisposed) RefreshTubeVaultInformation();
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+        catch (Exception)
+        {
+            // Incluye timeout y errores de API; el servicio conserva el detalle técnico.
+            if (!IsDisposed)
+            {
+                tubeVaultCheckFailed = true;
+                RefreshTubeVaultInformation();
+            }
+        }
+        finally { if (!IsDisposed) SetBusy(false); }
+    }
+
+    private void TubeVaultUpdateStateChanged(object? sender, EventArgs e)
+    {
+        if (IsDisposed) return;
+        tubeVaultCheckFailed = false;
+        RefreshTubeVaultInformation();
+    }
+
+    private void RefreshTubeVaultInformation()
+    {
+        var update = tubeVaultUpdateService.LatestCheck;
+        tubeVaultVersionLabel.Text = text.Get("SettingsInstalledVersion", AppMetadata.Version);
+        tubeVaultLastCheckLabel.Text = FormatLastCheck(
+            update?.CheckedAt ?? settingsService.LoadLastTubeVaultUpdateCheck());
+        tubeVaultStatusLabel.Text = tubeVaultCheckFailed
+            ? text.Get("TubeVaultUpdateCheckFailed")
+            : update is null
+                ? text.Get("TubeVaultNotChecked")
+                : update.IsUpdateAvailable
+                    ? text.Get("TubeVaultUpdateAvailable", update.AvailableVersion)
+                    : text.Get(update.IsLocalVersionNewer ? "TubeVaultLocalNewer" : "TubeVaultUpToDate");
+        tubeVaultStatusLabel.ForeColor = tubeVaultCheckFailed
+            ? ThemeService.GetColors(theme).Error
+            : ThemeService.GetColors(theme).SecondaryText;
+        viewReleaseButton.Visible = update?.IsUpdateAvailable == true && !tubeVaultCheckFailed;
+        viewReleaseButton.Enabled = !busy;
+    }
+
+    private void OpenTubeVaultRelease()
+    {
+        var update = tubeVaultUpdateService.LatestCheck;
+        if (busy || tubeVaultCheckFailed || update?.IsUpdateAvailable != true) return;
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(update.ReleaseUrl) { UseShellExecute = true });
+        }
+        catch (Exception exception)
+        {
+            log.Error("Abrir release de TubeVault", ("Detalle", exception.ToString()));
+            tubeVaultStatusLabel.Text = text.Get("TubeVaultReleaseOpenFailed");
+            tubeVaultStatusLabel.ForeColor = ThemeService.GetColors(theme).Error;
+        }
+    }
+
     private async Task CheckFfmpegAsync()
     {
         if (busy) return;
@@ -501,6 +600,7 @@ internal sealed class ComponentsForm : Form
 
     private void RefreshInformation()
     {
+        RefreshTubeVaultInformation();
         ytDlpVersionLabel.Text = text.Get("SettingsInstalledVersion", installedYtDlpVersion);
         ytDlpLastCheckLabel.Text = FormatLastCheck(lastYtDlpCheck);
         ytDlpStatusLabel.Text = !ytDlpAvailable
@@ -536,6 +636,8 @@ internal sealed class ComponentsForm : Form
     private void SetBusy(bool value)
     {
         busy = value;
+        checkTubeVaultButton.Enabled = !value;
+        viewReleaseButton.Enabled = !value && tubeVaultUpdateService.LatestCheck?.IsUpdateAvailable == true;
         checkYtDlpButton.Enabled = !value;
         checkFfmpegButton.Enabled = !value;
         updateYtDlpButton.Enabled = !value && AvailableUpdate is not null;
@@ -558,7 +660,7 @@ internal sealed class ComponentsForm : Form
     {
         var colors = ThemeService.GetColors(theme);
         foreach (var button in new Button[]
-                 { checkYtDlpButton, checkFfmpegButton, repairButton, closeButton })
+                 { checkTubeVaultButton, checkYtDlpButton, checkFfmpegButton, repairButton, closeButton })
         {
             button.BackColor = button.Enabled ? colors.SecondaryButton : colors.Disabled;
             button.ForeColor = button.Enabled ? colors.Text : colors.DisabledText;
@@ -566,7 +668,7 @@ internal sealed class ComponentsForm : Form
             button.FlatAppearance.MouseOverBackColor = colors.SecondaryButtonHover;
         }
 
-        foreach (var button in new Button[] { updateYtDlpButton, updateFfmpegButton })
+        foreach (var button in new Button[] { viewReleaseButton, updateYtDlpButton, updateFfmpegButton })
         {
             button.BackColor = button.Enabled ? AccentColor : colors.Disabled;
             button.ForeColor = button.Enabled ? Color.White : colors.DisabledText;
