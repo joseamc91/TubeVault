@@ -1495,7 +1495,7 @@ public sealed class MainForm : Form
 
                     await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
                     using var downloadedImage = Image.FromStream(stream);
-                    preview = new Bitmap(downloadedImage);
+                    preview = CoverArtworkProcessor.CreateCover(downloadedImage);
                     cancellationToken.ThrowIfCancellationRequested();
 
                     if (IsDisposed || !ReferenceEquals(currentMedia, media))
