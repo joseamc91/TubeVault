@@ -1,6 +1,6 @@
 # Privacidad
 
-Este documento describe el comportamiento de TubeVault `2026.09.008` según su
+Este documento describe el comportamiento de TubeVault `2026.10.001` según su
 código fuente actual. No sustituye las políticas de los servicios de terceros.
 
 ## Datos almacenados localmente
@@ -11,7 +11,8 @@ telemetría ni analytics propios.
 La aplicación guarda sus datos bajo `data/`, junto al ejecutable:
 
 - `data/config/settings.json`: carpeta de destino, calidad MP3, tema, idioma y fechas
-  de las últimas comprobaciones de actualización de componentes;
+  de las últimas comprobaciones de actualización de componentes y de la última
+  comprobación correcta de nuevas versiones Stable de TubeVault;
 - `data/logs/TubeVault_YYYY-MM-DD.log`: registros técnicos diarios; se conservan como
   máximo quince;
 - `data/tools/`: copias locales de yt-dlp, FFmpeg y ffprobe descargadas durante la
@@ -36,13 +37,18 @@ si no son imprescindibles.
 
 ## Conexiones de red
 
-TubeVault realiza conexiones únicamente para sus funciones principales:
+TubeVault realiza conexiones para sus funciones y comprobaciones de versiones:
 
 - ejecuta yt-dlp contra la URL indicada por el usuario, por ejemplo YouTube o
   YouTube Music, para analizar o descargar el contenido solicitado;
 - consulta `api.github.com` y descarga desde `github.com` las releases oficiales,
   ejecutables y checksums de yt-dlp;
 - consulta `www.gyan.dev` para la versión, el checksum y el paquete de FFmpeg;
+- consulta automáticamente `api.github.com/repos/joseamc91/TubeVault/releases/latest`
+  para conocer la última Stable de TubeVault, tras la preparación de componentes
+  y si han pasado al menos 24 horas desde la última comprobación correcta o nunca
+  se ha comprobado. También permite una consulta manual. Solo obtiene información
+  de release; no descarga ni instala una nueva versión de TubeVault automáticamente;
 - descarga previews desde las URLs de thumbnail devueltas por la metadata de
   yt-dlp. El dominio concreto depende del servicio y del contenido analizado.
 

@@ -3,6 +3,15 @@
 Las versiones `2026.09.001`–`2026.09.006` fueron releases locales de desarrollo.
 Desde `2026.09.007`, TubeVault se publica mediante GitHub Releases.
 
+## 2026.10.001 — Stable
+
+- Comprobación automática periódica de nuevas versiones Stable de TubeVault, sin descargar ni instalar la aplicación.
+- Nueva comprobación manual desde Componentes y actualizaciones.
+- Indicador discreto cuando existe una versión de TubeVault más reciente.
+- Acceso directo a la GitHub Release disponible.
+- Nueva tarjeta de TubeVault dentro de Componentes y actualizaciones.
+- Integración visual refinada de las tarjetas de componentes.
+
 ## 2026.09.009 — Stable
 
 - Nueva identidad visual de TubeVault.

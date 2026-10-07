@@ -24,7 +24,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/joseamc91/TubeVault/releases/latest/download/TubeVault-2026.09.009-win-x64-portable.zip">
+  <a href="https://github.com/joseamc91/TubeVault/releases/latest/download/TubeVault-2026.10.001-win-x64-portable.zip">
     <img src="https://img.shields.io/badge/⬇%20DESCARGAR%20TUBEVAULT-3B82F6?style=for-the-badge" alt="Descargar TubeVault">
   </a>
 </p>
@@ -45,6 +45,7 @@
 - Ofrece tres perfiles de calidad MP3: Alta, Media y Baja.
 - Incluye interfaz en Español e English y modos Claro y Oscuro.
 - Gestiona automáticamente yt-dlp, FFmpeg y ffprobe.
+- Comprueba si existe una nueva versión Stable de TubeVault y permite abrir su release, sin descargar ni instalar la aplicación automáticamente.
 
 ## Cómo usarlo
 

@@ -3,6 +3,15 @@
 Versions `2026.09.001`–`2026.09.006` were local development releases.
 Since `2026.09.007`, TubeVault has been published through GitHub Releases.
 
+## 2026.10.001 — Stable
+
+- Periodic automatic checks for new Stable versions of TubeVault, without downloading or installing the application.
+- New manual update check from Components and updates.
+- Discreet indicator when a newer TubeVault version is available.
+- Direct access to the available GitHub Release.
+- New TubeVault card in Components and updates.
+- Refined visual integration of component cards.
+
 ## 2026.09.009 — Stable
 
 - New TubeVault visual identity.

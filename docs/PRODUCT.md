@@ -112,6 +112,23 @@ No muestra stderr, stack traces ni comandos. El detalle técnico se guarda en un
 
 La fila **Acerca de TubeVault** de Ajustes abre una ventana con la versión de TubeVault, las versiones detectadas de yt-dlp y FFmpeg, arquitectura, runtime, autor, plataforma y créditos breves.
 
+## Comprobación de actualizaciones de TubeVault
+
+TubeVault consulta la última Stable pública de `joseamc91/TubeVault` en GitHub.
+Después de preparar los componentes, comprueba su versión en segundo plano si
+nunca lo ha hecho o han pasado al menos 24 horas desde la última consulta correcta.
+Tras una comprobación correcta no repite la consulta automática durante esas 24 horas.
+Los fallos no guardan una fecha de comprobación ni interrumpen el arranque.
+
+En **Componentes y actualizaciones**, la tarjeta de TubeVault permite comprobar
+manualmente en cualquier momento. Si hay una Stable posterior, aparece un
+indicador discreto en Ajustes y el botón **VER RELEASE** abre la publicación en
+el navegador. Una versión local superior a la Stable pública no se considera
+una actualización pendiente.
+
+TubeVault no descarga, reemplaza ni instala automáticamente una nueva versión
+de la aplicación; el usuario decide si obtiene el ZIP de la release.
+
 ## Actualización de yt-dlp
 
 TubeVault comprueba periódicamente en segundo plano si existe una publicación estable más reciente. Si la encuentra, muestra un indicador discreto en Ajustes. La fila **Componentes y actualizaciones** abre una ventana independiente para consultar versiones, buscar actualizaciones, actualizar manualmente y reparar los componentes.

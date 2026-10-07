@@ -27,18 +27,19 @@
   un ZIP self-contained `win-x64` y un artifact versionado.
 - CI portable de `2026.09.008` validada en GitHub; sus artifacts son temporales.
 - `2026.09.008` publicada como Public Preview / Pre-release.
-- `2026.09.009` se prepara como primera Stable / Latest, con branding renovado
+- `2026.09.009` fue publicada como primera Stable / Latest, con branding renovado
   y sin cambios funcionales respecto a 008.
+- `2026.10.001` la sucede como nueva Stable / Latest al finalizar su publicación,
+  con comprobación de nuevas versiones Stable y tarjetas de componentes refinadas.
 - Presentación pública renovada: README ES/EN, banner, captura y assets visuales públicos.
-- Prueba física de preparación, análisis y descarga MP3 con ffprobe correcta
+- Prueba física de `2026.09.008`: preparación, análisis y descarga MP3 con ffprobe correcta
   en un equipo Windows 11 con Smart App Control activo, sin garantía universal.
 - Datos siempre bajo `<AppDirectory>/data`; el ZIP inicial contiene cuatro
   archivos públicos y ninguna herramienta descargada.
-- Las releases/tags `2026.09.007` y `2026.09.008`, y publicaciones anteriores permanecen inmutables.
+- Las releases/tags `2026.09.007`, `2026.09.008` y `2026.09.009`, y publicaciones anteriores permanecen inmutables.
 - Sin firma digital. SignPath Foundation rechazó la solicitud el 30/09/2026;
   podría volver a solicitarse con más señales públicas de adopción y actividad.
 
 ## Pendiente
 
-- Publicar, con autorización y validación previa, `2026.09.009` como primera Stable / Latest.
 - Evaluar firma futura; no existe proveedor ni integración activa.

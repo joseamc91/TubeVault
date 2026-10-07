@@ -2,7 +2,8 @@
 
 ## Estado actual
 
-TubeVault `2026.09.009`, preparada como primera Stable, sigue sin firma digital. No existe certificado asignado
+TubeVault `2026.09.009` fue la primera Stable. `2026.10.001` la sucede como nueva
+Stable al publicarse y sigue completamente sin firma digital. No existe certificado asignado
 al proyecto ni integración activa con ningún proveedor de firma.
 
 La solicitud a SignPath Foundation fue rechazada el **30/09/2026** porque el
@@ -66,5 +67,5 @@ Estos principios aún no están implementados como un pipeline de firma.
 
 Consulte la [política de privacidad](../PRIVACY.md). TubeVault no opera un
 backend propio ni incluye telemetría o analytics propios. Solo realiza las
-conexiones necesarias para sus funciones y las comprobaciones o actualizaciones
-de componentes descritas en esa política.
+conexiones necesarias para sus funciones, las comprobaciones de nuevas versiones
+de TubeVault y las comprobaciones o actualizaciones de componentes descritas en esa política.

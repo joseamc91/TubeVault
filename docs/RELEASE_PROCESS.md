@@ -6,13 +6,17 @@ TubeVault utiliza `AAAA.MM.REVISION`, con una revisión de tres dígitos que vue
 a `001` al cambiar el mes. La fuente de versión es `TubeVault.csproj`;
 `InformationalVersion` determina el nombre público del ZIP.
 
-Durante el desarrollo normal se compila Release y se prueba desde
-`src/TubeVault/bin/Release/net10.0-windows`. Solo se ejecutan pruebas
-proporcionales al cambio. El empaquetado se realiza cuando se solicita
-expresamente o mediante CI; no crea por sí mismo una GitHub Release.
+Durante el desarrollo normal, `dotnet build` local valida la compilación y
+`scripts/build-portable.ps1` valida el empaquetado local cuando se solicita.
+Para la prueba física del ejecutable distribuible se utiliza preferentemente el
+ZIP generado por GitHub Actions, extraído en una carpeta separada. En este entorno
+no se usa el ejecutable de `bin/Release` como referencia de esa prueba física ni
+se recomienda desactivar Smart App Control o SmartScreen para ejecutar builds locales.
+Solo se ejecutan pruebas proporcionales al cambio. El empaquetado no crea por sí
+mismo una GitHub Release.
 
-Las releases locales `2026.09.001`–`2026.09.006` y la release/tag pública
-`2026.09.007` y `2026.09.008` son históricas e inmutables. Nunca se sobrescriben ni se limpian
+Las releases locales `2026.09.001`–`2026.09.006` y las releases/tags públicas
+`2026.09.007`, `2026.09.008` y `2026.09.009` son históricas e inmutables. Nunca se sobrescriben ni se limpian
 para preparar una versión nueva. `dist/` no se utiliza para el empaquetado actual.
 
 ## Única distribución: TubeVault Portable
@@ -67,7 +71,8 @@ El workflow `TubeVault CI` conserva un build Release independiente, ejecuta el
 builder, comprueba que existe exactamente un ZIP esperado no vacío y sube
 únicamente ese ZIP como artifact
 `TubeVault-AAAA.MM.REVISION-win-x64-portable`.
-Los artifacts son temporales y no equivalen a releases públicas.
+Los artifacts de CI son temporales y no equivalen a releases públicas. El asset
+de GitHub Release es la distribución pública permanente de esa versión.
 La CI portable de `2026.09.008` ya fue validada en GitHub.
 
 ## Validación y publicación
@@ -79,25 +84,29 @@ Solo deben incluir cambios realmente introducidos en esa versión, con entradas
 breves y orientadas al usuario.
 
 1. Confirmar versión, notas y commit objetivo.
-2. Comprobar build y empaquetado en CI para ese código.
+2. Comprobar build y empaquetado en CI para el SHA exacto de la rama.
 3. Inspeccionar ZIP, nombre, contenido y SHA-256.
 4. Probar una extracción separada, conservando limpio el ZIP original.
 5. Validar arranque, preparación, análisis y los flujos afectados por el cambio.
 6. Confirmar datos bajo `data/` y destino MP3 elegido por el usuario.
 7. Registrar pruebas, limitaciones y estado de firma.
-8. Tras la autorización, crear el tag de versión y la GitHub Release sobre el
-   código validado, adjuntando únicamente el ZIP Portable.
+8. Tras la autorización, integrar en `main`, esperar su CI para el SHA exacto y
+   validar el ZIP oficial de ese run. Crear el tag de versión y la GitHub Release
+   sobre ese commit, adjuntando únicamente el ZIP Portable de la CI de `main`,
+   no el build local ni el artifact de la rama.
 9. Mantener tag, release y asset publicado inmutables.
 
 `2026.09.008` fue publicada como **Public Preview / Pre-release** y permanece
-histórica e inmutable. `2026.09.009` se prepara como la primera **Stable / Latest**,
-sin cambios funcionales respecto a 008. Sus notas están en
-[2026.09.008](releases/2026.09.008.md) y [2026.09.009](releases/2026.09.009.md).
+histórica e inmutable. `2026.09.009` fue publicada como la primera **Stable / Latest**,
+sin cambios funcionales respecto a 008. `2026.10.001` la sucede como nueva
+**Stable / Latest** al publicarse. Sus notas están en
+[2026.09.008](releases/2026.09.008.md), [2026.09.009](releases/2026.09.009.md) y
+[2026.10.001](releases/2026.10.001.md).
 
 La estrategia mantiene una Stable como referencia pública. Las versiones de
 desarrollo posteriores pueden publicarse como Pre-release; cuando una versión
 esté suficientemente validada, sustituirá a la anterior como nueva Stable / Latest.
-La publicación de 009 será la primera aplicación de esta estrategia. Cambiar
+La publicación de 009 fue la primera aplicación de esta estrategia. Cambiar
 Latest no modifica los tags, releases ni assets ya publicados.
 No presentar la build como firmada: consulte la
 [Code signing policy](CODE_SIGNING_POLICY.md).
