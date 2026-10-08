@@ -24,7 +24,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/joseamc91/TubeVault/releases/latest/download/TubeVault-2026.10.001-win-x64-portable.zip">
+  <a href="https://github.com/joseamc91/TubeVault/releases/latest/download/TubeVault-2026.10.003-win-x64-portable.zip">
     <img src="https://img.shields.io/badge/⬇%20DOWNLOAD%20TUBEVAULT-3B82F6?style=for-the-badge" alt="Download TubeVault">
   </a>
 </p>
@@ -43,6 +43,7 @@
 - Reads the available video or playlist information before downloading, such as title, channel, duration or date.
 - Lets you select which songs to download from a playlist.
 - Offers three MP3 quality profiles: High, Medium and Low.
+- Supports embedded MP3 cover art with a square crop; the option is enabled by default and configurable in Settings.
 - Includes Spanish and English interfaces, with Light and Dark modes.
 - Automatically manages yt-dlp, FFmpeg and ffprobe.
 - Checks for a new Stable version of TubeVault and lets you open its release, without automatically downloading or installing the application.
@@ -76,7 +77,7 @@ Windows 11 is the main platform for development and testing.
 
 TubeVault does not yet have a digital code signature.
 
-The stable version has been successfully tested on a Windows 11 computer with Smart App Control enabled. This does not guarantee the same behavior on every computer or Windows configuration.
+TubeVault Portable 2026.09.008 was successfully tested on a Windows 11 computer with Smart App Control enabled. This does not guarantee the same behavior on every computer, Windows configuration or later version.
 
 You do not need to disable Smart App Control or SmartScreen, or add exclusions, to use TubeVault.
 

@@ -16,7 +16,8 @@ Solo se ejecutan pruebas proporcionales al cambio. El empaquetado no crea por s�
 mismo una GitHub Release.
 
 Las releases locales `2026.09.001`–`2026.09.006` y las releases/tags públicas
-`2026.09.007`, `2026.09.008`, `2026.09.009` y `2026.10.001` son históricas e inmutables.
+`2026.09.007`, `2026.09.008`, `2026.09.009`, `2026.10.001` y `2026.10.002`
+son históricas e inmutables.
 Nunca se sobrescriben ni se limpian para preparar una versión nueva. `dist/` no se
 utiliza para el empaquetado actual.
 
@@ -91,7 +92,8 @@ breves y orientadas al usuario.
 5. Validar arranque, preparación, análisis y los flujos afectados por el cambio.
 6. Confirmar datos bajo `data/` y destino MP3 elegido por el usuario.
 7. Registrar pruebas, limitaciones y estado de firma.
-8. Para una nueva Stable, tras la autorización, integrar en `main`, esperar su CI
+8. Para una nueva Stable, tras la autorización, integrar en `main` mediante
+   fast-forward; si no es posible, detener la integración. Esperar su CI
    para el SHA exacto y validar el ZIP oficial de ese run. Para una Public Preview,
    conservar la rama feature sin fusionarla en `main` y validar su CI para el SHA
    final de preparación, documentando cualquier validación física pendiente.
@@ -102,12 +104,13 @@ breves y orientadas al usuario.
 
 `2026.09.008` fue publicada como **Public Preview / Pre-release** y permanece
 histórica e inmutable. `2026.09.009` fue publicada como la primera **Stable / Latest**,
-sin cambios funcionales respecto a 008. `2026.10.001` es la **Stable / Latest** actual.
-`2026.10.002` se publica como **Public Preview / Pre-release** desde
-`feature/2026.10.002-cover-artwork`, sin fusionar esa rama en `main` ni sustituir
-la Stable o el endpoint `/releases/latest`. Sus notas están en
+sin cambios funcionales respecto a 008. `2026.10.001` es una **Stable histórica**.
+`2026.10.002` permanece como **Public Preview / Pre-release histórica**, sin
+modificar su tag ni asset. `2026.10.003` sucede a 001 como nueva **Stable / Latest**,
+incorporando las carátulas y el refinamiento de playlist. Sus notas están en
 [2026.09.008](releases/2026.09.008.md), [2026.09.009](releases/2026.09.009.md),
-[2026.10.001](releases/2026.10.001.md) y [2026.10.002](releases/2026.10.002.md).
+[2026.10.001](releases/2026.10.001.md), [2026.10.002](releases/2026.10.002.md) y
+[2026.10.003](releases/2026.10.003.md).
 
 La estrategia mantiene una Stable como referencia pública. Las versiones de
 desarrollo posteriores pueden publicarse como Pre-release; cuando una versión
@@ -117,12 +120,11 @@ Latest no modifica los tags, releases ni assets ya publicados.
 No presentar la build como firmada: consulte la
 [Code signing policy](CODE_SIGNING_POLICY.md).
 
-Si esta misma `2026.10.002` supera posteriormente la validación física, una
-autorización explícita del mantenedor podrá permitir cambiar únicamente el
-estado de su GitHub Release de Pre-release a Stable / Latest, conservando el mismo
-tag, commit, asset y SHA-256. No se reconstruye ni sustituye el asset para esa
-promoción: se publica como Stable exactamente el binario validado. Sin esa
-autorización, `2026.10.001` continúa siendo Stable / Latest.
+Finalmente, el refinamiento se publica como una versión posterior, `2026.10.003`,
+no mediante la promoción de 002 ni la sustitución de su asset. La Public Preview
+002 conserva su estado, tag, commit, ZIP y SHA-256 originales. El asset oficial
+de la Stable 003 procede exclusivamente del CI exitoso de `main` para el mismo
+SHA etiquetado. Stable no implica firma digital.
 
 ## Pruebas proporcionales
 
@@ -137,7 +139,9 @@ análisis de YouTube Music, descarga MP3 y ffprobe en un equipo Windows 11 con
 Smart App Control activo. Ese resultado no garantiza otros equipos; tampoco
 valida por sí mismo cambios posteriores de empaquetado o CI.
 
-La validación automatizada y CI de `2026.10.002` son correctas, pero su prueba
-física completa de GUI y descarga está pendiente: Smart App Control bloqueó el
-ejecutable sin firma en el equipo del mantenedor. Esta limitación se documenta
-en la Public Preview, sin recomendar desactivar protecciones de Windows.
+La validación automatizada de carátulas y del layout de playlist es correcta,
+incluyendo metadata, audio sin recodificación, ES/EN, Claro/Oscuro y DPI.
+La build candidata `2026.10.003` generada por GitHub Actions fue revisada
+físicamente por el mantenedor antes de autorizar su publicación como Stable.
+No se atribuyen pruebas físicas adicionales ni se recomienda desactivar
+protecciones de Windows.

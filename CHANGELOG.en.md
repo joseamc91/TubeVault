@@ -3,6 +3,16 @@
 Versions `2026.09.001`–`2026.09.006` were local development releases.
 Since `2026.09.007`, TubeVault has been published through GitHub Releases.
 
+## 2026.10.003 — Stable
+
+- Optional MP3 cover art, enabled by default and configurable in Settings.
+- Centered square 1:1 crop, up to 500×500 px, without enlarging smaller images.
+- Square preview using the same transformation as the MP3 cover.
+- Each song uses its own thumbnail, including songs in playlists.
+- Audio is not re-encoded when adding a cover; metadata and ID3v2.4 are preserved.
+- Missing thumbnails or cover-only failures preserve the valid MP3 without repeating the download; existing files are not modified.
+- Refined playlist view: 120×120 px cover and counter next to the selection controls, preserving the space for the song list.
+
 ## 2026.10.002 — Public Preview
 
 - New option to embed cover art in MP3 files.

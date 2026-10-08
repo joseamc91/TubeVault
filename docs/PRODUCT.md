@@ -49,7 +49,7 @@ guardan directamente en la carpeta principal.
 - Puede incluir título, artista, álbum, fecha/año y número de pista cuando la fuente los proporciona.
 - TubeVault no corrige ni infiere metadata mediante heurísticas o IA.
 
-## Carátulas (2026.10.002 Public Preview)
+## Carátulas (2026.10.003 Stable)
 
 La opción **Incrustar carátula en los MP3** está activada por defecto y puede
 desactivarse en Ajustes. Al aceptar se guarda la preferencia; cancelar descarta
@@ -67,7 +67,8 @@ se preserva la metadata existente y se mantiene ID3v2.4. Los archivos intermedio
 permanecen en la carpeta temporal privada del intento y se limpian al finalizar.
 
 Si no existe una thumbnail válida o falla únicamente el procesamiento de artwork,
-se conserva el MP3 válido sin portada. Los MP3 ya existentes nunca se modifican
+se conserva el MP3 válido sin portada, sin repetir toda la descarga por ese fallo.
+Los MP3 ya existentes nunca se modifican
 retroactivamente; la opción solo afecta a nuevas descargas.
 
 ## Calidad
@@ -127,6 +128,10 @@ No muestra stderr, stack traces ni comandos. El detalle técnico se guarda en un
 - El selector de calidad es horizontal y muestra una única opción activa.
 - La ventana principal mantiene estables la cabecera, la tarjeta de contenido y el bloque inferior de acciones.
 - Canciones y playlists reservan una zona fija para la miniatura; si no existe o no puede cargarse, se muestra un placeholder discreto.
+- La carátula de playlist ocupa un cuadrado de 120×120 px lógicos junto al resumen;
+  el contador aparece inmediatamente después de Seleccionar todo / Deseleccionar todo.
+  Se aprovecha la altura del resumen y de la selección sin reducir el espacio útil
+  de la lista ni mover la fila de carpeta.
 
 ## About
 

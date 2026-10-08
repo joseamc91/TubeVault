@@ -3,6 +3,16 @@
 Las versiones `2026.09.001`–`2026.09.006` fueron releases locales de desarrollo.
 Desde `2026.09.007`, TubeVault se publica mediante GitHub Releases.
 
+## 2026.10.003 — Stable
+
+- Carátulas opcionales para MP3, activadas por defecto y desactivables desde Ajustes.
+- Recorte central cuadrado 1:1, con un máximo de 500×500 px y sin ampliar imágenes pequeñas.
+- Preview cuadrada con la misma transformación utilizada para la portada MP3.
+- Cada canción utiliza su propia miniatura, también dentro de playlists.
+- Audio sin recodificación al añadir la portada, con metadata preservada e ID3v2.4.
+- La ausencia de miniatura o un fallo de carátula conserva el MP3 válido sin repetir la descarga; los archivos existentes no se modifican.
+- Vista de playlist refinada: portada de 120×120 px y contador junto a los controles de selección, conservando el espacio de la lista.
+
 ## 2026.10.002 — Public Preview
 
 - Nueva opción para incrustar carátulas en los MP3.

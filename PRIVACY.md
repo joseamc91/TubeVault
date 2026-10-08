@@ -1,6 +1,6 @@
 # Privacidad
 
-Este documento describe el comportamiento de TubeVault `2026.10.002` Public Preview
+Este documento describe el comportamiento de TubeVault `2026.10.003` Stable
 según su código fuente actual. No sustituye las políticas de los servicios de terceros.
 
 ## Datos almacenados localmente

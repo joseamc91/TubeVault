@@ -24,7 +24,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/joseamc91/TubeVault/releases/latest/download/TubeVault-2026.10.001-win-x64-portable.zip">
+  <a href="https://github.com/joseamc91/TubeVault/releases/latest/download/TubeVault-2026.10.003-win-x64-portable.zip">
     <img src="https://img.shields.io/badge/⬇%20DESCARGAR%20TUBEVAULT-3B82F6?style=for-the-badge" alt="Descargar TubeVault">
   </a>
 </p>
@@ -43,6 +43,7 @@
 - Lee antes de descargar la información disponible del vídeo o playlist, como título, canal, duración o fecha.
 - Permite seleccionar qué canciones descargar dentro de una playlist.
 - Ofrece tres perfiles de calidad MP3: Alta, Media y Baja.
+- Permite incrustar carátulas MP3 con recorte cuadrado; la opción está activada por defecto y se configura desde Ajustes.
 - Incluye interfaz en Español e English y modos Claro y Oscuro.
 - Gestiona automáticamente yt-dlp, FFmpeg y ffprobe.
 - Comprueba si existe una nueva versión Stable de TubeVault y permite abrir su release, sin descargar ni instalar la aplicación automáticamente.
@@ -76,7 +77,7 @@ Windows 11 es la plataforma principal de desarrollo y pruebas.
 
 TubeVault todavía no dispone de firma digital de código.
 
-La versión estable ha sido probada correctamente en un equipo con Windows 11 y Smart App Control activo. Esto no garantiza el mismo comportamiento en todos los equipos o configuraciones de Windows.
+TubeVault Portable 2026.09.008 fue probado correctamente en un equipo con Windows 11 y Smart App Control activo. Esto no garantiza el mismo comportamiento en todos los equipos, configuraciones de Windows o versiones posteriores.
 
 No es necesario desactivar Smart App Control, SmartScreen ni añadir exclusiones para utilizar TubeVault.
 

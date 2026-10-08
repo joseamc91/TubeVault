@@ -2,10 +2,10 @@
 
 ## Estado actual
 
-TubeVault `2026.09.009` fue la primera Stable. `2026.10.001` es la Stable actual;
-`2026.10.002` se publica como Public Preview. Ambas siguen completamente sin firma
-digital. No existe certificado asignado al proyecto ni integración activa con
-ningún proveedor de firma.
+TubeVault `2026.09.009` fue la primera Stable. `2026.10.001` es una Stable histórica
+y `2026.10.002` permanece como Public Preview. `2026.10.003` es la nueva Stable y
+sigue completamente sin firma digital. No existe certificado asignado al
+proyecto ni integración activa con ningún proveedor de firma.
 
 La solicitud a SignPath Foundation fue rechazada el **30/09/2026** porque el
 proyecto todavía no alcanzaba suficiente visibilidad/confianza pública.
@@ -22,9 +22,11 @@ mismo comportamiento en todos los equipos. No se recomienda desactivar Smart
 App Control ni SmartScreen, añadir exclusiones o desbloquear archivos para
 ejecutar TubeVault.
 
-Smart App Control bloqueó el nuevo ejecutable sin firma de `2026.10.002` en el
-equipo de pruebas del mantenedor. La prueba física completa de esta Public Preview
-queda pendiente; no se recomienda desactivar protecciones para realizarla.
+Durante las pruebas iniciales de `2026.10.002`, Smart App Control bloqueó el
+ejecutable sin firma en el equipo del mantenedor. La build candidata `2026.10.003`
+de GitHub Actions fue revisada físicamente antes de autorizar Stable. Esto no
+garantiza el comportamiento en otros equipos ni cambia la política de seguridad:
+no se recomienda desactivar protecciones de Windows.
 
 ## Roles del proyecto
 
