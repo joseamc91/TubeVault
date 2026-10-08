@@ -29,17 +29,23 @@
 - `2026.09.008` publicada como Public Preview / Pre-release.
 - `2026.09.009` fue publicada como primera Stable / Latest, con branding renovado
   y sin cambios funcionales respecto a 008.
-- `2026.10.001` la sucede como nueva Stable / Latest al finalizar su publicación,
+- `2026.10.001` es la Stable / Latest actual,
   con comprobación de nuevas versiones Stable y tarjetas de componentes refinadas.
+- `2026.10.002` se publica como Public Preview / Pre-release con soporte de carátulas,
+  desarrollado en `feature/2026.10.002-cover-artwork`, sin fusionar en `main`.
+- Validación automatizada de carátulas y CI correctas. La prueba física de GUI y
+  descarga queda pendiente porque Smart App Control bloqueó la build sin firma
+  `2026.10.002` en el equipo del mantenedor; no es un fallo funcional confirmado.
 - Presentación pública renovada: README ES/EN, banner, captura y assets visuales públicos.
 - Prueba física de `2026.09.008`: preparación, análisis y descarga MP3 con ffprobe correcta
   en un equipo Windows 11 con Smart App Control activo, sin garantía universal.
 - Datos siempre bajo `<AppDirectory>/data`; el ZIP inicial contiene cuatro
   archivos públicos y ninguna herramienta descargada.
-- Las releases/tags `2026.09.007`, `2026.09.008` y `2026.09.009`, y publicaciones anteriores permanecen inmutables.
+- Las releases/tags `2026.09.007`, `2026.09.008`, `2026.09.009` y `2026.10.001`, y publicaciones anteriores permanecen inmutables.
 - Sin firma digital. SignPath Foundation rechazó la solicitud el 30/09/2026;
   podría volver a solicitarse con más señales públicas de adopción y actividad.
 
 ## Pendiente
 
+- Validación física completa de `2026.10.002`; sigue siendo Public Preview.
 - Evaluar firma futura; no existe proveedor ni integración activa.

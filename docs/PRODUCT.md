@@ -48,7 +48,27 @@ guardan directamente en la carpeta principal.
 - La metadata se incrusta mediante las capacidades nativas de yt-dlp y FFmpeg.
 - Puede incluir título, artista, álbum, fecha/año y número de pista cuando la fuente los proporciona.
 - TubeVault no corrige ni infiere metadata mediante heurísticas o IA.
-- Actualmente no se incrustan carátulas.
+
+## Carátulas (2026.10.002 Public Preview)
+
+La opción **Incrustar carátula en los MP3** está activada por defecto y puede
+desactivarse en Ajustes. Al aceptar se guarda la preferencia; cancelar descarta
+el cambio pendiente. Si se desactiva, no se obtiene ni procesa una imagen para el MP3.
+
+TubeVault utiliza la thumbnail del contenido: cada canción individual obtiene
+su propia imagen, también cuando forma parte de una playlist. La transformación
+es siempre un recorte central cuadrado 1:1, sin análisis inteligente ni selección
+de zona, seguido de una reducción a un máximo de 500×500 px. Nunca amplía imágenes
+pequeñas. La preview y la portada del MP3 comparten esta misma regla.
+
+La portada final se convierte a JPEG de calidad 90, con la transparencia aplanada,
+y se incrusta como portada frontal. El audio se copia sin recodificación,
+se preserva la metadata existente y se mantiene ID3v2.4. Los archivos intermedios
+permanecen en la carpeta temporal privada del intento y se limpian al finalizar.
+
+Si no existe una thumbnail válida o falla únicamente el procesamiento de artwork,
+se conserva el MP3 válido sin portada. Los MP3 ya existentes nunca se modifican
+retroactivamente; la opción solo afecta a nuevas descargas.
 
 ## Calidad
 
@@ -161,7 +181,6 @@ no sustituyen componentes por sí solas y un fallo conserva la instalación vál
 - Formatos distintos de MP3.
 - Selector de bitrate numérico o calidad personalizada.
 - Descargas simultáneas o paralelas.
-- Carátulas y thumbnails incrustados.
 - Edición manual, limpieza o inferencia mediante IA de metadata.
 - Normalización de volumen, ReplayGain u otros procesados.
 - Login, cookies, autenticación o contenido privado.

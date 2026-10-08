@@ -16,8 +16,9 @@ Solo se ejecutan pruebas proporcionales al cambio. El empaquetado no crea por s�
 mismo una GitHub Release.
 
 Las releases locales `2026.09.001`–`2026.09.006` y las releases/tags públicas
-`2026.09.007`, `2026.09.008` y `2026.09.009` son históricas e inmutables. Nunca se sobrescriben ni se limpian
-para preparar una versión nueva. `dist/` no se utiliza para el empaquetado actual.
+`2026.09.007`, `2026.09.008`, `2026.09.009` y `2026.10.001` son históricas e inmutables.
+Nunca se sobrescriben ni se limpian para preparar una versión nueva. `dist/` no se
+utiliza para el empaquetado actual.
 
 ## Única distribución: TubeVault Portable
 
@@ -90,18 +91,23 @@ breves y orientadas al usuario.
 5. Validar arranque, preparación, análisis y los flujos afectados por el cambio.
 6. Confirmar datos bajo `data/` y destino MP3 elegido por el usuario.
 7. Registrar pruebas, limitaciones y estado de firma.
-8. Tras la autorización, integrar en `main`, esperar su CI para el SHA exacto y
-   validar el ZIP oficial de ese run. Crear el tag de versión y la GitHub Release
-   sobre ese commit, adjuntando únicamente el ZIP Portable de la CI de `main`,
-   no el build local ni el artifact de la rama.
-9. Mantener tag, release y asset publicado inmutables.
+8. Para una nueva Stable, tras la autorización, integrar en `main`, esperar su CI
+   para el SHA exacto y validar el ZIP oficial de ese run. Para una Public Preview,
+   conservar la rama feature sin fusionarla en `main` y validar su CI para el SHA
+   final de preparación, documentando cualquier validación física pendiente.
+9. Crear el tag sobre el mismo commit cuyo CI produjo el ZIP validado. Adjuntar
+   únicamente ese ZIP, nunca el build local ni un artifact de otro SHA. Publicar
+   la preview con `prerelease=true` y sin marcarla como Latest.
+10. Mantener tags y assets publicados inmutables; no reescribir notas históricas.
 
 `2026.09.008` fue publicada como **Public Preview / Pre-release** y permanece
 histórica e inmutable. `2026.09.009` fue publicada como la primera **Stable / Latest**,
-sin cambios funcionales respecto a 008. `2026.10.001` la sucede como nueva
-**Stable / Latest** al publicarse. Sus notas están en
-[2026.09.008](releases/2026.09.008.md), [2026.09.009](releases/2026.09.009.md) y
-[2026.10.001](releases/2026.10.001.md).
+sin cambios funcionales respecto a 008. `2026.10.001` es la **Stable / Latest** actual.
+`2026.10.002` se publica como **Public Preview / Pre-release** desde
+`feature/2026.10.002-cover-artwork`, sin fusionar esa rama en `main` ni sustituir
+la Stable o el endpoint `/releases/latest`. Sus notas están en
+[2026.09.008](releases/2026.09.008.md), [2026.09.009](releases/2026.09.009.md),
+[2026.10.001](releases/2026.10.001.md) y [2026.10.002](releases/2026.10.002.md).
 
 La estrategia mantiene una Stable como referencia pública. Las versiones de
 desarrollo posteriores pueden publicarse como Pre-release; cuando una versión
@@ -110,6 +116,13 @@ La publicación de 009 fue la primera aplicación de esta estrategia. Cambiar
 Latest no modifica los tags, releases ni assets ya publicados.
 No presentar la build como firmada: consulte la
 [Code signing policy](CODE_SIGNING_POLICY.md).
+
+Si esta misma `2026.10.002` supera posteriormente la validación física, una
+autorización explícita del mantenedor podrá permitir cambiar únicamente el
+estado de su GitHub Release de Pre-release a Stable / Latest, conservando el mismo
+tag, commit, asset y SHA-256. No se reconstruye ni sustituye el asset para esa
+promoción: se publica como Stable exactamente el binario validado. Sin esa
+autorización, `2026.10.001` continúa siendo Stable / Latest.
 
 ## Pruebas proporcionales
 
@@ -123,3 +136,8 @@ La validación física de TubeVault Portable `2026.09.008` completó preparació
 análisis de YouTube Music, descarga MP3 y ffprobe en un equipo Windows 11 con
 Smart App Control activo. Ese resultado no garantiza otros equipos; tampoco
 valida por sí mismo cambios posteriores de empaquetado o CI.
+
+La validación automatizada y CI de `2026.10.002` son correctas, pero su prueba
+física completa de GUI y descarga está pendiente: Smart App Control bloqueó el
+ejecutable sin firma en el equipo del mantenedor. Esta limitación se documenta
+en la Public Preview, sin recomendar desactivar protecciones de Windows.

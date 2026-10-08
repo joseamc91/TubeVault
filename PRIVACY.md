@@ -1,7 +1,7 @@
 # Privacidad
 
-Este documento describe el comportamiento de TubeVault `2026.10.001` según su
-código fuente actual. No sustituye las políticas de los servicios de terceros.
+Este documento describe el comportamiento de TubeVault `2026.10.002` Public Preview
+según su código fuente actual. No sustituye las políticas de los servicios de terceros.
 
 ## Datos almacenados localmente
 
@@ -10,7 +10,8 @@ telemetría ni analytics propios.
 
 La aplicación guarda sus datos bajo `data/`, junto al ejecutable:
 
-- `data/config/settings.json`: carpeta de destino, calidad MP3, tema, idioma y fechas
+- `data/config/settings.json`: carpeta de destino, calidad MP3, tema, idioma,
+  preferencia para incrustar carátulas en los MP3 y fechas
   de las últimas comprobaciones de actualización de componentes y de la última
   comprobación correcta de nuevas versiones Stable de TubeVault;
 - `data/logs/TubeVault_YYYY-MM-DD.log`: registros técnicos diarios; se conservan como
@@ -50,7 +51,14 @@ TubeVault realiza conexiones para sus funciones y comprobaciones de versiones:
   se ha comprobado. También permite una consulta manual. Solo obtiene información
   de release; no descarga ni instala una nueva versión de TubeVault automáticamente;
 - descarga previews desde las URLs de thumbnail devueltas por la metadata de
-  yt-dlp. El dominio concreto depende del servicio y del contenido analizado.
+  yt-dlp. El dominio concreto depende del servicio y del contenido analizado;
+- cuando la opción de carátulas está activada, yt-dlp puede obtener la thumbnail
+  de cada canción descargada para utilizarla como portada del MP3. La imagen se
+  procesa localmente; TubeVault no sube la carátula a ningún servidor propio.
+
+Las imágenes intermedias para las carátulas permanecen en la carpeta temporal
+privada de cada intento y se eliminan al finalizar. No existe un backend propio,
+telemetría ni analytics propios para esta función.
 
 No hay un proxy ni servidor de TubeVault entre la aplicación y esos servicios.
 Los servicios remotos pueden recibir datos propios de una conexión de red, como
