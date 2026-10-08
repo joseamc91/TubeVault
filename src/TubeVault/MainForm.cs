@@ -486,8 +486,10 @@ public sealed class MainForm : Form
         playlistPanel.Dock = DockStyle.Fill;
         playlistPanel.Tag = "surface";
         playlistPanel.Padding = new Padding(16, 10, 16, 10);
-        playlistPanel.ColumnCount = 1;
+        playlistPanel.ColumnCount = 2;
         playlistPanel.RowCount = 4;
+        playlistPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        playlistPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 136F));
         playlistPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         playlistPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         playlistPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -496,12 +498,11 @@ public sealed class MainForm : Form
         playlistSummary.Dock = DockStyle.Fill;
         playlistSummary.Tag = "surface";
         playlistSummary.AutoSize = true;
-        playlistSummary.ColumnCount = 3;
+        playlistSummary.ColumnCount = 2;
         playlistSummary.RowCount = 4;
         playlistSummary.Margin = new Padding(0, 0, 0, 4);
         playlistSummary.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 82F));
         playlistSummary.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        playlistSummary.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 154F));
 
         var heading = CreateResultHeading("PlaylistHeading");
         heading.Margin = new Padding(0, 0, 0, 4);
@@ -513,10 +514,11 @@ public sealed class MainForm : Form
 
         ConfigureThumbnailPreview(playlistThumbnail);
         playlistThumbnail.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        playlistThumbnail.Size = new Size(138, 92);
+        playlistThumbnail.Size = new Size(120, 120);
         playlistThumbnail.Margin = new Padding(16, 2, 0, 0);
-        playlistSummary.Controls.Add(playlistThumbnail, 2, 0);
-        playlistSummary.SetRowSpan(playlistThumbnail, 4);
+        // Comparte la altura del resumen y la selección sin añadir una fila a la tarjeta.
+        playlistPanel.Controls.Add(playlistThumbnail, 1, 0);
+        playlistPanel.SetRowSpan(playlistThumbnail, 2);
 
         ConfigurePlaylistList();
         ConfigurePlaylistSelectionBar();
@@ -548,7 +550,9 @@ public sealed class MainForm : Form
         playlistPanel.Controls.Add(playlistSummary, 0, 0);
         playlistPanel.Controls.Add(playlistSelectionBar, 0, 1);
         playlistPanel.Controls.Add(playlistList, 0, 2);
+        playlistPanel.SetColumnSpan(playlistList, 2);
         playlistPanel.Controls.Add(folderSection, 0, 3);
+        playlistPanel.SetColumnSpan(folderSection, 2);
     }
 
     private void ConfigurePlaylistList()
@@ -622,7 +626,7 @@ public sealed class MainForm : Form
         actions.Controls.Add(deselectAllButton);
 
         playlistSelectionCountLabel.AutoSize = true;
-        playlistSelectionCountLabel.Anchor = AnchorStyles.Right;
+        playlistSelectionCountLabel.Anchor = AnchorStyles.Left;
         playlistSelectionCountLabel.Tag = "secondary";
         playlistSelectionCountLabel.Margin = new Padding(12, 0, 0, 0);
 
